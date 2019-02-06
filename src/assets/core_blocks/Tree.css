@@ -1,0 +1,35 @@
+.tree {
+    height: 100%;
+    overflow-y: auto;
+}
+.tree-list {
+    padding: 0;
+    margin: 0;
+}
+.tree-list__item, .tree-list__subitem {
+    display: block;
+}
+.tree-list__body {
+    border: 1px solid #333;
+    padding: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+.tree-list__name {
+    font-weight: bold;
+}
+.tree-list__button, .tree-list__name {
+    display: inline-block;
+    padding: 0 5px;
+}
+.tree-list__sublist {
+    padding-left: 7%;
+    /*display: none;*/
+}
+.tree-list__sublist.active {
+    display: block;
+}
+.tree-list__sublist-item {
+    display: block;
+}

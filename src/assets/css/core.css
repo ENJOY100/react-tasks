@@ -1,0 +1,7 @@
+body {
+    font-size: 14px;
+    font-family: sans-serif;
+}
+.app__body {
+    height: calc(100vh - 67px);
+}
