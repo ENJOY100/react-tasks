@@ -4,38 +4,31 @@ import '../assets/core_blocks/TodosView.css';
 
 class TodosView extends Component {
     render() {
+        let todosView, todosFetch;
+        if (this.props.todosView.items) {
+            todosFetch = this.props.todosView.items.map(el =>
+                <li className="todo-list__item todo">
+                    <div className="r ai-c">
+                        <div className="col-10 t-c">
+                            <input className="todo__checkbox" type="checkbox" checked={el.checked}/>
+                        </div>
+                        <div className="col-80">
+                            <div className="todo__name">
+                                {el.name}
+                            </div>
+                        </div>
+                        <div className="col-10 t-c">
+                            <Button preset="edit" />
+                        </div>
+                    </div>
+                </li>
+            );
+
+            todosView = todosFetch.length > 0 ? todosFetch : "Нету тасков, добавьте";
+        }
         return (
             <ul className="todo-list">
-                <li className="todo-list__item todo">
-                    <div className="r ai-c">
-                        <div className="col-10 t-c">
-                            <input className="todo__checkbox" type="checkbox"/>
-                        </div>
-                        <div className="col-80">
-                            <div className="todo__name">
-                                Todo Item #1
-                            </div>
-                        </div>
-                        <div className="col-10 t-c">
-                            <Button preset="edit" />
-                        </div>
-                    </div>
-                </li>
-                <li className="todo-list__item todo">
-                    <div className="r ai-c">
-                        <div className="col-10 t-c">
-                            <input className="todo__checkbox" type="checkbox"/>
-                        </div>
-                        <div className="col-80">
-                            <div className="todo__name">
-                                Todo Item #2
-                            </div>
-                        </div>
-                        <div className="col-10 t-c">
-                            <Button preset="edit" />
-                        </div>
-                    </div>
-                </li>
+                { todosView }
             </ul>
         )
     }
