@@ -2,17 +2,19 @@ import React, {Component} from 'react';
 
 import InsertBlock from './components/InsertBlock';
 import CheckButton from './components/CheckButton';
-import SearchInput from './components/SearchInput';
+import SearchBlock from './components/SearchBlock';
 import Tree from './components/Tree';
+import TodosView from './components/TodosView';
 
 import '../node_modules/aline.css/dist/aline.min.css';
+import '../node_modules/font-awesome/css/font-awesome.min.css';
 import './assets/css/core.css';
 
 class App extends Component {
     constructor() {
         super();
         this.state = {
-
+            todos: [],
         }
     }
 
@@ -38,7 +40,7 @@ class App extends Component {
                                                 <CheckButton text="Show more"/>
                                             </div>
                                             <div className="col-40">
-                                                <SearchInput placeholderName="Search" />
+                                                <SearchBlock placeholderName="Search" />
                                             </div>
                                             <div className="col-45">
                                                 <InsertBlock placeholderName="Text input with button" style={{width: '100%'}} />
@@ -50,18 +52,18 @@ class App extends Component {
                             </div>
                         </div>
 
-                        <div className="app__body">
+                        <div className="app__body pt-30">
                             <div className="r h-100 ai-str">
 
                                 <div className="col-30">
                                     <div className="app__body-left h-100">
-                                        <Tree />
+                                        <Tree todos={this.todos} />
                                     </div>
                                 </div>
 
                                 <div className="col-70">
                                     <div className="app__body-right">
-
+                                        <TodosView todos={this.todos} />
                                     </div>
                                 </div>
 

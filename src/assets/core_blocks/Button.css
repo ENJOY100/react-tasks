@@ -1,0 +1,31 @@
+.btn-ui {
+    border: 1px solid #ddd;
+    display: inline-block;
+    cursor: pointer;
+    padding: 2px;
+    margin: 2px;
+    line-height: 1;
+}
+.btn-ui:hover {
+    background-color: #ddd;
+}
+.btn-ui::before {
+    font-family: FontAwesome;
+    font-size: 12px;
+    color: #000;
+}
+.btn-ui--open::before {
+    content: '\f107';
+}
+.btn-ui--edit::before {
+    content: '\f044';
+}
+.btn-ui--delete::before {
+    content: '\f1f8';
+}
+.btn-ui--add::before {
+    content: '\f067';
+}
+.btn-ui--close::before {
+    content: '\f00d';
+}

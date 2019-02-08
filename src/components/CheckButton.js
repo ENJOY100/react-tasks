@@ -7,7 +7,7 @@ class CheckButton extends Component {
             <div className="check-button">
                 <label className="check-button__label">
                     <input className="check-button__checkbox" type="checkbox"/>
-                    <span className="check-button__checkbox">
+                    <span className="check-button__text">
                         { this.props.text }
                     </span>
                 </label>

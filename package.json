@@ -5,6 +5,7 @@
   "dependencies": {
     "aline.css": "^1.0.6",
     "eslint-plugin-react": "^7.12.4",
+    "font-awesome": "^4.7.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "react-scripts": "2.1.3"
