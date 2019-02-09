@@ -7,7 +7,7 @@ class TodosView extends Component {
         let todosView, todosFetch;
         if (this.props.todosView.items) {
             todosFetch = this.props.todosView.items.map(el =>
-                <li className="todo-list__item todo">
+                <li key={el.id} className="todo-list__item todo">
                     <div className="r ai-c">
                         <div className="col-10 t-c">
                             <input className="todo__checkbox" type="checkbox" checked={el.checked}/>

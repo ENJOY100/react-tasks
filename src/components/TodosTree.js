@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import '../assets/core_blocks/Tree.css'
+import '../assets/core_blocks/TodosTree.css'
 
-import Button from '../components/Button';
 import TodosTreeItem from '../components/TodosTreeItem';
 
-class Tree extends Component {
+class TodosTree extends Component {
     render() {
         let todoItems = [];
         if (this.props.todos) {
@@ -13,6 +12,10 @@ class Tree extends Component {
                     key={el.id}
                     el={el}
                     openCategory={this.props.openCategory}
+                    deleteCategory={this.props.deleteCategory}
+                    modalOpen={this.props.modalOpen}
+                    modalAdd={this.props.modalAdd}
+                    openList={this.props.openList}
                 />
             );
         }
@@ -26,4 +29,4 @@ class Tree extends Component {
     }
 }
 
-export default Tree;
+export default TodosTree;

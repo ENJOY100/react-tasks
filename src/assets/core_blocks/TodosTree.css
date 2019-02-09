@@ -23,6 +23,9 @@
 .tree-list__item .tree-list__body:hover {
     background-color: #f5f5f5;
 }
+.tree-list__button {
+    display: inline-block;
+}
 /*.tree-list > :first-child .tree-list__body {
     border-top: 1px solid #333;
 }
@@ -54,11 +57,8 @@
 }
 .tree-list__item .tree-list {
     margin-left: 7%;
-    /*display: none;*/
+    display: none;
 }
-.tree-list__item > .tree-list.active {
-    display: block;
-}
-.tree-list__item .tree-list {
+.tree-list__item.opened .tree-list {
     display: block;
 }

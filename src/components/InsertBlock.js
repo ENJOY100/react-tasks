@@ -4,6 +4,7 @@ import '../assets/core_blocks/InsertBlock.css'
 class InsertBlock extends Component {
     render() {
         let clickEvent, changeEvent, value;
+        /*Если будет всего 2 значения, то переделать под тернарный оператор*/
         if (this.props.addCategory) {
             clickEvent = this.props.addCategory;
             changeEvent = this.props.addCatValueChange;

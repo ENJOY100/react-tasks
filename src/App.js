@@ -3,12 +3,13 @@ import React, {Component} from 'react';
 import InsertBlock from './components/InsertBlock';
 import CheckButton from './components/CheckButton';
 import SearchBlock from './components/SearchBlock';
-import Tree from './components/Tree';
+import TodosTree from './components/TodosTree';
 import TodosView from './components/TodosView';
 
 import '../node_modules/aline.css/dist/aline.min.css';
 import '../node_modules/font-awesome/css/font-awesome.min.css';
 import './assets/css/core.css';
+import Modal from "./components/Modal";
 
 class App extends Component {
     constructor() {
@@ -16,11 +17,28 @@ class App extends Component {
         this.state = {
             todos: [],
             todosView: [],
+            focusElement: {},
             addCatValue: '',
             addTodoValue: '',
+            modalHidden: true,
+            modal: React.createRef(),
+            modalAdd: false,
+            modalEditCat: false,
+            modalEditTodo: false,
+            modalName: '',
+
         }
+        //this.modal = React.createRef();
         /*this.addCategory = this.addCategory.bind(this);*/
         // this.addCatValueChange = this.addCatValueChange.bind(this);
+    }
+
+    categoryConstructor(name) {
+        this.id = Math.random();
+        this.name = name;
+        this.children = [];
+        this.items = [];
+        this.opened = false;
     }
 
     addCatValueChange = (event) => {
@@ -32,6 +50,12 @@ class App extends Component {
     addTodoValueChange = (event) => {
         this.setState({
             addTodoValue: event.target.value,
+        });
+    }
+
+    modalNameChange = (event) => {
+        this.setState({
+            modalName: event.target.value,
         });
     }
 
@@ -50,27 +74,23 @@ class App extends Component {
     addCategory = () => {
         console.log('addCategory');
         let todos = this.state.todos;
-        todos.push({
-            id: Math.random(),
-            name: this.state.addCatValue,
-            children: [],
-            items: [],
-            opened: false,
-        });
+        let newCat = new this.categoryConstructor(this.state.addCatValue);
+        todos.push(newCat);
         this.setState({
             todos: todos,
         });
         this.addCatValueClear();
     }
 
-    openCategory = (el) => {
+    openCategory = (el, event) => {
         console.log('OpenCategory');
         console.log(this.state.todos.indexOf(el));
         let id = this.state.todos.indexOf(el);
         let todosView = this.state.todos[id];
         this.setState({
             todosView: todosView,
-        })
+        });
+        //console.log(event.target);
     }
 
     addTodo = () => {
@@ -89,14 +109,114 @@ class App extends Component {
         this.addTodoValueClear();
     }
 
+    deleteCategory = (el, parent, event) => {
+        //console.log(event);
+        //event.stopPropagation();
+        //console.log('Delete category');
+        //console.log(el);
+        let id = this.state.todos.indexOf(el);
+        let todos = this.state.todos;
+        todos.splice(id, 1);
+        this.setState({
+            todos: todos,
+        });
+        //console.log(id);
+        event.stopPropagation();
+    }
+
+    addSubCategory = () => {
+        console.log('addSubCategory');
+        console.log(this.state.modalName);
+        console.log(this.state.focusElement);
+        let id = this.state.todos.indexOf(this.state.focusElement);
+        let todos = this.state.todos;
+        let newCat = new this.categoryConstructor(this.state.modalName);
+        todos[id].children.push(newCat);
+        this.setState({
+            todos: todos,
+        });
+        this.modalClose();
+        //console.log(todos[id]);
+    }
+
+    /*Переделать структуру объектов в массиве, нам нужно чтобы был 1 массив общий со всеми объектами категориями,
+    у категорий будет свойство parent указываюзее на id родительской категории(или на объект) (подобие relation)*/
+
+    modalOpen = (preset, el, parent, event) => {
+        let id = this.state.todos.indexOf(el);
+        //let todos = this.state.todos;
+        switch (preset) {
+            case 'add': {
+                this.setState({
+                    modalAdd: true,
+                    focusElement: el,
+                    //modalName: todos[id].name,
+                });
+                break;
+            }
+            case 'editcat': {
+                this.setState({
+                    modalEditCat: true,
+                });
+                break;
+            }
+            case 'edittodo': {
+                this.setState({
+                    modalEditTodo: true,
+                });
+                break;
+            }
+        }
+        console.log('modalOpen');
+        this.setState({
+            modalHidden: false,
+        });
+        event.stopPropagation();
+    }
+
+    modalClose = () => {
+        this.setState({
+            modalHidden: true,
+            modalAdd: false,
+            modalEditCat: false,
+            modalEditTodo: false,
+            modalName: '',
+            focusElement: {},
+        })
+        /*this.setState({
+            task_params_name: '',
+            task_params_date: '',
+        })*/
+    }
+
+    modalMU = (e) => {
+        if (!this.state.modal.current.contains(e.target) && !this.state.modalHidden) {
+            this.modalClose();
+        }
+    }
+
+    openList = (el) => {
+        console.log('openList');
+        let id = this.state.todos.indexOf(el);
+        let todos = this.state.todos;
+        todos[id].opened = !todos[id].opened;
+        this.setState({
+            todos: todos,
+        });
+    }
+
+    componentDidMount() {
+        document.addEventListener('mouseup', this.modalMU);
+    }
+
    /* componentWillMount() {
         console.log(this.state.todos)
     }*/
 
-    componentWillUpdate(nextProps, nextState, nextContext) {
+    /*componentWillUpdate(nextProps, nextState, nextContext) {
         console.log(`Will Update`);
         console.log(this.state.todosView);
-    }
+    }*/
 
     render() {
         return (
@@ -153,8 +273,13 @@ class App extends Component {
 
                                 <div className="col-30">
                                     <div className="app__body-left h-100">
-                                        <Tree todos={this.state.todos}
-                                              openCategory={this.openCategory}
+                                        <TodosTree
+                                            todos={this.state.todos}
+                                            openCategory={this.openCategory}
+                                            deleteCategory={this.deleteCategory}
+                                            modalOpen={this.modalOpen}
+                                            modalAdd={this.state.modalAdd}
+                                            openList={this.openList}
                                         />
                                     </div>
                                 </div>
@@ -170,6 +295,17 @@ class App extends Component {
 
                     </div>
                 </section>
+                <Modal
+                    modal={this.state.modal}
+                    modalClose={this.modalClose}
+                    modalHidden={this.state.modalHidden}
+                    modalAdd={this.state.modalAdd}
+                    modalEditCat={this.state.modalEditCat}
+                    modalEditTodo={this.state.modalEditTodo}
+                    addSubCategory={this.addSubCategory}
+                    modalName={this.state.modalName}
+                    modalNameChange={this.modalNameChange}
+                />
             </React.Fragment>
         );
     }
