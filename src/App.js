@@ -16,7 +16,7 @@ class App extends Component {
         super();
         this.state = {
             todos: [],
-            todosView: [],
+            todosView: null,
             focusElement: {},
             addCatValue: '',
             addTodoValue: '',
@@ -33,12 +33,13 @@ class App extends Component {
         // this.addCatValueChange = this.addCatValueChange.bind(this);
     }
 
-    categoryConstructor(name) {
+    Category(name) {
         this.id = Math.random();
         this.name = name;
-        this.children = [];
+        //this.children = [];
         this.items = [];
         this.opened = false;
+        this.parentID = null;
     }
 
     addCatValueChange = (event) => {
@@ -73,8 +74,9 @@ class App extends Component {
 
     addCategory = () => {
         console.log('addCategory');
+        if (!this.state.addCatValue) return alert('Enter caterogy title');
         let todos = this.state.todos;
-        let newCat = new this.categoryConstructor(this.state.addCatValue);
+        let newCat = new this.Category(this.state.addCatValue);
         todos.push(newCat);
         this.setState({
             todos: todos,
@@ -82,8 +84,9 @@ class App extends Component {
         this.addCatValueClear();
     }
 
-    openCategory = (el, event) => {
-        console.log('OpenCategory');
+    showTodos = (el, event) => {
+        console.log(el);
+        console.log('showTodos');
         console.log(this.state.todos.indexOf(el));
         let id = this.state.todos.indexOf(el);
         let todosView = this.state.todos[id];
@@ -95,16 +98,18 @@ class App extends Component {
 
     addTodo = () => {
         console.log('AddTodo');
+        if (!this.state.todosView) return alert('Choose category');
+        if (!this.state.addTodoValue) return alert('Enter TODO title');
         let id = this.state.todos.indexOf(this.state.todosView);
         let todos = this.state.todos;
         todos[id].items.push({
-            id: Math.random(),
+            id: Math.random(), // ???
             name: this.state.addTodoValue,
             checked: false,
         })
         this.setState({
             todos: todos,
-            todosView: todos[id],
+            //todosView: todos[id], // это по сути не нужно
         })
         this.addTodoValueClear();
     }
@@ -120,6 +125,11 @@ class App extends Component {
         this.setState({
             todos: todos,
         });
+        if (this.state.todosView == el) {
+            this.setState({
+                todosView: null
+            });
+        }
         //console.log(id);
         event.stopPropagation();
     }
@@ -130,8 +140,9 @@ class App extends Component {
         console.log(this.state.focusElement);
         let id = this.state.todos.indexOf(this.state.focusElement);
         let todos = this.state.todos;
-        let newCat = new this.categoryConstructor(this.state.modalName);
-        todos[id].children.push(newCat);
+        let newCat = new this.Category(this.state.modalName);
+        newCat.parentID = todos[id].id;
+        todos.push(newCat);
         this.setState({
             todos: todos,
         });
@@ -142,7 +153,10 @@ class App extends Component {
     /*Переделать структуру объектов в массиве, нам нужно чтобы был 1 массив общий со всеми объектами категориями,
     у категорий будет свойство parent указываюзее на id родительской категории(или на объект) (подобие relation)*/
 
-    modalOpen = (preset, el, parent, event) => {
+    modalOpen = (preset, el, parentID, event) => {
+        if (!parentID) return;
+        console.log('modalOpen');
+        console.log(parentID);
         let id = this.state.todos.indexOf(el);
         //let todos = this.state.todos;
         switch (preset) {
@@ -275,7 +289,7 @@ class App extends Component {
                                     <div className="app__body-left h-100">
                                         <TodosTree
                                             todos={this.state.todos}
-                                            openCategory={this.openCategory}
+                                            showTodos={this.showTodos}
                                             deleteCategory={this.deleteCategory}
                                             modalOpen={this.modalOpen}
                                             modalAdd={this.state.modalAdd}

@@ -5,7 +5,7 @@ import '../assets/core_blocks/TodosView.css';
 class TodosView extends Component {
     render() {
         let todosView, todosFetch;
-        if (this.props.todosView.items) {
+        if (this.props.todosView && this.props.todosView.items) {
             todosFetch = this.props.todosView.items.map(el =>
                 <li key={el.id} className="todo-list__item todo">
                     <div className="r ai-c">
@@ -24,7 +24,7 @@ class TodosView extends Component {
                 </li>
             );
 
-            todosView = todosFetch.length > 0 ? todosFetch : "Нету тасков, добавьте";
+            todosView = todosFetch.length > 0 ? todosFetch : "TODOS is NULL, please ADD";
         }
         return (
             <ul className="todo-list">

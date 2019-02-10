@@ -7,11 +7,15 @@ class TodosTree extends Component {
     render() {
         let todoItems = [];
         if (this.props.todos) {
-            todoItems = this.props.todos.map(el =>
+            todoItems = this.props.todos.filter((el) => {
+                return el.parentID == null;
+            });
+            todoItems = todoItems.map(el =>
                 <TodosTreeItem
                     key={el.id}
                     el={el}
-                    openCategory={this.props.openCategory}
+                    todos={this.props.todos}
+                    showTodos={this.props.showTodos}
                     deleteCategory={this.props.deleteCategory}
                     modalOpen={this.props.modalOpen}
                     modalAdd={this.props.modalAdd}
