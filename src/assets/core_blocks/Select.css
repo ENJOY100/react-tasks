@@ -1,0 +1,22 @@
+.select {
+    padding: 5px;
+    background-color: #e5e5e5;
+    position: relative;
+    cursor: pointer;
+}
+.select__body {
+    display: none;
+    width: 100%;
+    padding: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    margin-left: -1px;
+    margin-right: -1px;
+}
+.select.opened .select__body {
+    display: block;
+}

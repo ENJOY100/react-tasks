@@ -6,51 +6,25 @@
     padding: 0;
     margin: 0;
 }
-.tree-list .tree-list__item .tree-list__body {
-    border: 1px solid #333;
-    border-bottom: none;
+.tree-list__select-item .tree-list__body {
+    padding: 2px;
+}
+.tree-list__body {
     cursor: pointer;
     padding: 5px;
+    border: 1px solid #333;
+    margin-top: -1px;
 }
-.tree-list .tree-list__item.opened > .tree-list__body {
-    border-bottom: 1px solid #333;
+.tree > .tree-list > :first-child > .tree-list__body {
+    margin-top: 0;
 }
-.tree-list__item > .tree-list > :first-child > .tree-list__body {
-    border-top: none;
-}
-.tree-list > :last-child > .tree-list__body {
-    /*border-bottom: none;*/
-}
-.tree > .tree-list > :last-child > .tree-list__body {
-    border-bottom: 1px solid #333;
-}
-.tree > .tree-list > :last-child > .tree-list > :last-child > .tree-list__body {
-    border-bottom: 1px solid #333;
-}
-/*.tree > .tree-list > :last-child > .tree-list > .tree-list__item > :last-child > .tree-list > :last-child > .tree-list__body {
-    border-bottom: 1px solid #333;
-}*/
-/*КОРОЧЕ ПЕРЕДЕЛАТЬ ПО УМУ*/
 .tree-list__item .tree-list__body:hover {
     background-color: #f5f5f5;
+    border: 1px solid #333;
 }
 .tree-list__button {
     display: inline-block;
 }
-/*.tree-list > :first-child .tree-list__body {
-    border-top: 1px solid #333;
-}
-.tree-list__item > ul > :first-child .tree-list__body {
-    border-top: none;
-}*/
-
-/*.tree-list__item.opened > ul > :last-child .tree-list__body {
-    border-bottom: none;
-}*/
-/*.tree-list__item.opened + .tree-list__item .tree-list__body {
-    border-top: 1px solid #333;
-}*/
-
 .tree-list__item {
     display: block;
 }
@@ -72,4 +46,7 @@
     -ms-transform: rotateZ(180deg);
     -o-transform: rotateZ(180deg);
     transform: rotateZ(180deg);
+}
+.tree-list__select-item .tree-list {
+    display: block;
 }

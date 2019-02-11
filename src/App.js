@@ -27,10 +27,8 @@ class App extends Component {
             modalEditTodo: false,
             modalName: '',
             modalCheck: false,
+            selectedCategory: null,
         }
-        //this.modal = React.createRef();
-        /*this.addCategory = this.addCategory.bind(this);*/
-        // this.addCatValueChange = this.addCatValueChange.bind(this);
     }
 
     Category(name, parentID) {
@@ -113,6 +111,7 @@ class App extends Component {
             id: Math.random(), // ???
             name: this.state.addTodoValue,
             checked: false,
+            hidden: false,
         })
         this.setState({
             todos: todos,
@@ -209,6 +208,7 @@ class App extends Component {
             modalName: '',
             modalCheck: false,
             focusElement: null,
+            selectedCategory: null,
         });
         /*this.setState({
             task_params_name: '',
@@ -248,29 +248,70 @@ class App extends Component {
     editTodo = () => {
         console.log('editTodo');
         if (!this.state.modalName) return alert('Enter the TODO title');
-        let id = this.state.todos.indexOf(this.state.todosView);
+
+        let id = this.state.todos.indexOf(this.state.todosView); // ID категории, показывающей TODOxи
         let todos = this.state.todos;
-        let todoID = this.state.todos[id].items.indexOf(this.state.focusElement);
-        todos[id].items[todoID].name = this.state.modalName;
-        todos[id].items[todoID].checked = this.state.modalCheck;
-        this.setState({
-            todos: todos,
-        });
+        let todoID = this.state.todos[id].items.indexOf(this.state.focusElement); // ID выбранной TODOxи
+
+        let todoEL = this.state.focusElement; // непосредственно наша TODOxа
+
+        todoEL.name = this.state.modalName;
+        todoEL.checked = this.state.modalCheck;
+
+        if (this.state.selectedCategory) {
+            let selectedID = this.state.todos.indexOf(this.state.selectedCategory);
+            todos[selectedID].items.push(todoEL);
+            todos[id].items.splice(todoID, 1);
+            this.setState({
+                todos: todos,
+            });
+        } else {
+            todos[id].items[todoID] = todoEL;
+            this.setState({
+                todos: todos,
+            });
+        }
+
         this.modalClose();
     }
 
-    /*Почему запуск 2 раза?*/
-    showDone = () => {
+    showDone = (event) => {
+        /*ПЕРЕДЕЛАТЬ*/
         console.log('showDone');
-        console.log(this.state.todosView.items);
-        //if (this.state.todosView.items.length == 0) return alert('Please add a todos');
-        let todoItems = this.state.todosView.items;
-        todoItems = todoItems.filter((el) => {
-           return el.checked;
-        });
+        console.log(this.state.todosView);
+        //console.log(this.state.todosView.items);
+        let todosView, todoItems;
+        if (!this.state.todosView) {
+            event.preventDefault();
+            alert('Please add a todos');
+        }
+        if (this.state.todosView.items.length > 0) {
+            todosView = this.state.todosView;
+            todoItems = todosView.items.filter((el) => {
+                return !el.checked;
+            });
+            console.log(todoItems);
+            for (let todo in todoItems) {
+                todoItems[todo].hidden = !todoItems[todo].hidden;
+            }
+        }
         this.setState({
-            todosView: todoItems,
+            todosView: todosView,
         });
+    }
+
+    selectCategory = (el, event) => {
+        console.log('selectCategory');
+        console.log(el);
+        console.log(this.state.focusElement);
+
+        let id = this.state.todos.indexOf(el);
+        let todos = this.state.todos;
+
+        this.setState({
+            selectedCategory: todos[id],
+        });
+        //event.stopPropagation();
     }
 
     componentDidMount() {
@@ -290,13 +331,6 @@ class App extends Component {
         return (
             <React.Fragment>
                 <section className="app">
-                    {/*<div>
-                        <span onClick={this.checkTodos}>Todos -</span>
-                        {this.state.todos}
-                    </div>*/}
-                    <div>
-                        {this.state.addCatValue}
-                    </div>
                     <div className="c">
 
                         <div className="app__header ptb-20">
@@ -372,6 +406,8 @@ class App extends Component {
                 </section>
                 <Modal
                     todos={this.state.todos}
+                    openList={this.openList}
+                    selectCategory={this.selectCategory}
                     modal={this.state.modal}
                     modalClose={this.modalClose}
                     modalHidden={this.state.modalHidden}
@@ -385,6 +421,7 @@ class App extends Component {
                     modalNameChange={this.modalNameChange}
                     modalCheckChange={this.modalCheckChange}
                     modalCheck={this.state.modalCheck}
+                    selectedCategory={this.state.selectedCategory}
                 />
             </React.Fragment>
         );

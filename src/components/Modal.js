@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import '../assets/core_blocks/Modal.css'
 
+import Select from './Select';
+
 class Modal extends Component {
     render() {
         let hidden = this.props.modalHidden ? 'hidden' : '';
@@ -8,28 +10,6 @@ class Modal extends Component {
         let editCat = this.props.modalEditCat ? 'editcat' : '';
         let editTodo = this.props.modalEditTodo ? 'edittodo' : '';
         let modalClass = `modal-wrap ${hidden} ${add} ${editCat} ${editTodo}`;
-
-        /*КОРОЧЕ, добавить сюда TREE компонент, пошаманить со стилями*/
-        let todos = this.props.todos;
-        todos = todos.map((el) => {
-            let catEL = el;
-            let childrenCat = todos.filter((el) => {
-                return el.parentID == catEL.id;
-            });
-            childrenCat = childrenCat.map(el =>
-                <li value="">
-                    { el.name }
-                </li>
-            );
-            return (
-                <li value="">
-                    {el.name}
-                    <ul>
-                        { childrenCat }
-                    </ul>
-                </li>
-            );
-        });
 
         return (
             <React.Fragment>
@@ -62,11 +42,14 @@ class Modal extends Component {
                             }
 
                             { this.props.modalEditTodo &&
-                            <div className="modal__line">
-                                <ul name="" id="">
-                                    {todos}
-                                </ul>
-                            </div>
+                                <div className="modal__line">
+                                    <Select
+                                        todos={this.props.todos}
+                                        openList={this.props.openList}
+                                        selectCategory={this.props.selectCategory}
+                                        selectedCategory={this.props.selectedCategory}
+                                    />
+                                </div>
                             }
 
                             {/*<div className="modal__line">

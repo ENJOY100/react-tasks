@@ -78,3 +78,6 @@
 .btn--action:hover {
     background-color: #dfe6ed;
 }
+.modal__checkbox {
+    cursor: pointer;
+}

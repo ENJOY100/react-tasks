@@ -9,11 +9,8 @@
     display: block;
     padding: 25px;
     border: 1px solid #333;
-    border-bottom: none;
+    margin: -1px 0;
 }
 .todo-list__item:hover {
     background-color: #f5f5f5;
-}
-.todo__checkbox {
-    cursor: pointer;
 }

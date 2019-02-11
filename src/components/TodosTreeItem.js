@@ -5,13 +5,21 @@ import Button from '../components/Button';
 
 class TodosTreeItem extends Component {
     render() {
+        let treeClickEvent, todosTreeItemClass;
         let childrenCat = this.props.todos.filter((el) => {
             return el.parentID == this.props.el.id;
         });
         let todosState = this.props.el.opened && childrenCat.length > 0 ? 'opened' : '';
-        let todosTreeItemClass = `tree-list__item ${todosState}`;
 
         let isopened = this.props.el.opened && childrenCat.length ? 'opened' : 'closed'; // индикатор, удалить после завершения
+
+        if (this.props.showTodos) {
+            treeClickEvent = this.props.showTodos;
+            todosTreeItemClass = `tree-list__item ${todosState}`;
+        } else {
+            treeClickEvent = this.props.selectCategory;
+            todosTreeItemClass = `tree-list__item tree-list__select-item`;
+        }
 
         childrenCat = childrenCat.map(el =>
             <TodosTreeItem
@@ -24,15 +32,16 @@ class TodosTreeItem extends Component {
                 modalOpen={this.props.modalOpen}
                 modalAdd={this.props.modalAdd}
                 openList={this.props.openList}
+                selectCategory={this.props.selectCategory}
             />
         )
 
         return (
             <li className={todosTreeItemClass}>
-                <div className="tree-list__body" onClick={(event) => this.props.showTodos(this.props.el, event)}>
+                <div className="tree-list__body" onClick={(event) => {treeClickEvent(this.props.el, event)}}>
                     <div className="r ai-c cp-0">
                         <div className="col-5 t-c">
-                            { childrenCat.length > 0 &&
+                            { childrenCat.length > 0 && this.props.openList &&
                                 <div className="tree-list__button" onClick={(event) => this.props.openList(this.props.el, event)}>
                                     <Button preset="open" />
                                 </div>
@@ -42,18 +51,24 @@ class TodosTreeItem extends Component {
                             <div className="tree-list__name">
                                 {this.props.el.name}
                             </div>
-                            <div className="tree-list__button" onClick={(event) => this.props.modalOpen('editcat', this.props.el, event)}>
-                                <Button preset="edit" />
-                            </div>
+                            { this.props.modalOpen &&
+                                <div className="tree-list__button" onClick={(event) => this.props.modalOpen('editcat', this.props.el, event)}>
+                                    <Button preset="edit" />
+                                </div>
+                            }
                             {isopened}
                         </div>
                         <div className="col-45 t-r">
-                            <div className="tree-list__button" onClick={(event) => this.props.deleteCategory(this.props.el, event)}>
-                                <Button preset="delete" />
-                            </div>
-                            <div className="tree-list__button" onClick={(event) => this.props.modalOpen('add', this.props.el, event)}>
-                                <Button preset="add" />
-                            </div>
+                            { this.props.deleteCategory &&
+                                <div className="tree-list__button" onClick={(event) => this.props.deleteCategory(this.props.el, event)}>
+                                    <Button preset="delete" />
+                                </div>
+                            }
+                            { this.props.modalOpen &&
+                                <div className="tree-list__button" onClick={(event) => this.props.modalOpen('add', this.props.el, event)}>
+                                    <Button preset="add" />
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

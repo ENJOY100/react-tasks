@@ -20,6 +20,7 @@ class TodosTree extends Component {
                     modalOpen={this.props.modalOpen}
                     modalAdd={this.props.modalAdd}
                     openList={this.props.openList}
+                    selectCategory={this.props.selectCategory}
                 />
             );
         }

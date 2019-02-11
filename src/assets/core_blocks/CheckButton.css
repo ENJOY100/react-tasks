@@ -8,6 +8,10 @@
 .check-button__text {
     display: inline-block;
     padding-left: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .check-button, .check-button__label, .check-button__checkbox {
     cursor: pointer;
