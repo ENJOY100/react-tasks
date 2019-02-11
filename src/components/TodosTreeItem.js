@@ -33,7 +33,7 @@ class TodosTreeItem extends Component {
                     <div className="r ai-c cp-0">
                         <div className="col-5 t-c">
                             { childrenCat.length > 0 &&
-                                <div className="tree-list__button" onClick={(event) => this.props.openList(this.props.el, this.props.parentEl, event)}>
+                                <div className="tree-list__button" onClick={(event) => this.props.openList(this.props.el, event)}>
                                     <Button preset="open" />
                                 </div>
                             }
@@ -42,22 +42,21 @@ class TodosTreeItem extends Component {
                             <div className="tree-list__name">
                                 {this.props.el.name}
                             </div>
-                            <div className="tree-list__button">
+                            <div className="tree-list__button" onClick={(event) => this.props.modalOpen('editcat', this.props.el, event)}>
                                 <Button preset="edit" />
                             </div>
                             {isopened}
                         </div>
                         <div className="col-45 t-r">
-                            <div className="tree-list__button" onClick={(event) => this.props.deleteCategory(this.props.el, this.props.parentID, event)}>
+                            <div className="tree-list__button" onClick={(event) => this.props.deleteCategory(this.props.el, event)}>
                                 <Button preset="delete" />
                             </div>
-                            <div className="tree-list__button" onClick={(event) => this.props.modalOpen('add', this.props.el, this.props.el.id, event)}>
+                            <div className="tree-list__button" onClick={(event) => this.props.modalOpen('add', this.props.el, event)}>
                                 <Button preset="add" />
                             </div>
                         </div>
                     </div>
                 </div>
-
 
                 { childrenCat.length > 0 &&
                     <ul className="tree-list">

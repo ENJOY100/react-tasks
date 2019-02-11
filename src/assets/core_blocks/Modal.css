@@ -17,7 +17,7 @@
     width: 500px;
     position: relative;
 }
-.modal-wrap.add .modal__head--add, .modal-wrap.editcat .modal__head--editcat, .modal-wrap.editcat .modal__head--edittodo {
+.modal-wrap.add .modal__head--add, .modal-wrap.editcat .modal__head--editcat, .modal-wrap.edittodo .modal__head--edittodo {
     display: block;
 }
 .modal__head--title {

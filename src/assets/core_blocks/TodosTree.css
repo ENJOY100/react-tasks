@@ -18,9 +18,19 @@
 .tree-list__item > .tree-list > :first-child > .tree-list__body {
     border-top: none;
 }
-.tree > .tree-list > :last-child .tree-list__body {
+.tree-list > :last-child > .tree-list__body {
+    /*border-bottom: none;*/
+}
+.tree > .tree-list > :last-child > .tree-list__body {
     border-bottom: 1px solid #333;
 }
+.tree > .tree-list > :last-child > .tree-list > :last-child > .tree-list__body {
+    border-bottom: 1px solid #333;
+}
+/*.tree > .tree-list > :last-child > .tree-list > .tree-list__item > :last-child > .tree-list > :last-child > .tree-list__body {
+    border-bottom: 1px solid #333;
+}*/
+/*КОРОЧЕ ПЕРЕДЕЛАТЬ ПО УМУ*/
 .tree-list__item .tree-list__body:hover {
     background-color: #f5f5f5;
 }

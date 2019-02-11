@@ -8,6 +8,29 @@ class Modal extends Component {
         let editCat = this.props.modalEditCat ? 'editcat' : '';
         let editTodo = this.props.modalEditTodo ? 'edittodo' : '';
         let modalClass = `modal-wrap ${hidden} ${add} ${editCat} ${editTodo}`;
+
+        /*КОРОЧЕ, добавить сюда TREE компонент, пошаманить со стилями*/
+        let todos = this.props.todos;
+        todos = todos.map((el) => {
+            let catEL = el;
+            let childrenCat = todos.filter((el) => {
+                return el.parentID == catEL.id;
+            });
+            childrenCat = childrenCat.map(el =>
+                <li value="">
+                    { el.name }
+                </li>
+            );
+            return (
+                <li value="">
+                    {el.name}
+                    <ul>
+                        { childrenCat }
+                    </ul>
+                </li>
+            );
+        });
+
         return (
             <React.Fragment>
                 <div className={modalClass}>
@@ -24,13 +47,27 @@ class Modal extends Component {
                             <div className="modal__line">
                                 <div className="r">
                                     <div className="col-30">
-                                        <label>Наименование:</label>
+                                        <label>Name:</label>
                                     </div>
                                     <div className="col-70">
                                         <input value={this.props.modalName} onChange={this.props.modalNameChange} type="text" className="modal__input modal__input--name" />
                                     </div>
                                 </div>
                             </div>
+
+                            { this.props.modalEditTodo &&
+                                <div className="modal__line">
+                                    <input className="modal__checkbox" type="checkbox" defaultChecked={this.props.modalCheck} onChange={this.props.modalCheckChange} readOnly={this.props.modalCheck}/>
+                                </div>
+                            }
+
+                            { this.props.modalEditTodo &&
+                            <div className="modal__line">
+                                <ul name="" id="">
+                                    {todos}
+                                </ul>
+                            </div>
+                            }
 
                             {/*<div className="modal__line">
                                 <div className="r">
@@ -49,7 +86,7 @@ class Modal extends Component {
                                 <button className="btn btn--action btn--save" onClick={this.props.addSubCategory}>Сохранить</button>
                                 }
                                 { this.props.modalEditCat &&
-                                <button className="btn btn--action btn--change" onClick={this.props.editCat}>Изменить</button>
+                                <button className="btn btn--action btn--change" onClick={this.props.editCategory}>Изменить</button>
                                 }
                                 { this.props.modalEditTodo &&
                                 <button className="btn btn--action btn--change" onClick={this.props.editTodo}>Изменить</button>

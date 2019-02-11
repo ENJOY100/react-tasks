@@ -17,7 +17,7 @@ class App extends Component {
         this.state = {
             todos: [],
             todosView: null,
-            focusElement: {},
+            focusElement: null,
             addCatValue: '',
             addTodoValue: '',
             modalHidden: true,
@@ -26,20 +26,20 @@ class App extends Component {
             modalEditCat: false,
             modalEditTodo: false,
             modalName: '',
-
+            modalCheck: false,
         }
         //this.modal = React.createRef();
         /*this.addCategory = this.addCategory.bind(this);*/
         // this.addCatValueChange = this.addCatValueChange.bind(this);
     }
 
-    Category(name) {
+    Category(name, parentID) {
         this.id = Math.random();
         this.name = name;
         //this.children = [];
         this.items = [];
         this.opened = false;
-        this.parentID = null;
+        this.parentID = parentID;
     }
 
     addCatValueChange = (event) => {
@@ -54,9 +54,16 @@ class App extends Component {
         });
     }
 
+    // МОЖЕТ УПРОСТИТЬ эти инпут функции ???
     modalNameChange = (event) => {
         this.setState({
             modalName: event.target.value,
+        });
+    }
+
+    modalCheckChange = (event) => {
+        this.setState({
+            modalCheck: event.target.checked,
         });
     }
 
@@ -114,7 +121,7 @@ class App extends Component {
         this.addTodoValueClear();
     }
 
-    deleteCategory = (el, parent, event) => {
+    deleteCategory = (el, event) => {
         //console.log(event);
         //event.stopPropagation();
         //console.log('Delete category');
@@ -138,10 +145,10 @@ class App extends Component {
         console.log('addSubCategory');
         console.log(this.state.modalName);
         console.log(this.state.focusElement);
+        if (!this.state.modalName) return alert('Enter the category title');
         let id = this.state.todos.indexOf(this.state.focusElement);
         let todos = this.state.todos;
-        let newCat = new this.Category(this.state.modalName);
-        newCat.parentID = todos[id].id;
+        let newCat = new this.Category(this.state.modalName, todos[id].id);
         todos.push(newCat);
         this.setState({
             todos: todos,
@@ -150,17 +157,14 @@ class App extends Component {
         //console.log(todos[id]);
     }
 
-    /*Переделать структуру объектов в массиве, нам нужно чтобы был 1 массив общий со всеми объектами категориями,
-    у категорий будет свойство parent указываюзее на id родительской категории(или на объект) (подобие relation)*/
-
-    modalOpen = (preset, el, parentID, event) => {
-        if (!parentID) return;
+    modalOpen = (preset, el, event, parent) => {
         console.log('modalOpen');
-        console.log(parentID);
-        let id = this.state.todos.indexOf(el);
+        //console.log(parentID);
+        //let id = this.state.todos.indexOf(el);
         //let todos = this.state.todos;
         switch (preset) {
             case 'add': {
+                //if (!parentID) return;
                 this.setState({
                     modalAdd: true,
                     focusElement: el,
@@ -171,17 +175,25 @@ class App extends Component {
             case 'editcat': {
                 this.setState({
                     modalEditCat: true,
+                    focusElement: el,
+                    modalName: el.name,
                 });
                 break;
             }
             case 'edittodo': {
+                console.log(el);
+                console.log(this.state.modalCheck);
                 this.setState({
                     modalEditTodo: true,
+                    focusElement: el,
+                    modalName: el.name,
+                    modalCheck: el.checked,
                 });
+                console.log(this.state.modalCheck);
                 break;
             }
         }
-        console.log('modalOpen');
+        //console.log('modalOpen');
         this.setState({
             modalHidden: false,
         });
@@ -195,8 +207,9 @@ class App extends Component {
             modalEditCat: false,
             modalEditTodo: false,
             modalName: '',
-            focusElement: {},
-        })
+            modalCheck: false,
+            focusElement: null,
+        });
         /*this.setState({
             task_params_name: '',
             task_params_date: '',
@@ -209,13 +222,54 @@ class App extends Component {
         }
     }
 
-    openList = (el) => {
+    openList = (el, event) => {
         console.log('openList');
         let id = this.state.todos.indexOf(el);
         let todos = this.state.todos;
         todos[id].opened = !todos[id].opened;
         this.setState({
             todos: todos,
+        });
+        event.stopPropagation();
+    }
+
+    editCategory = () => {
+        console.log('editCategory');
+        if (!this.state.modalName) return alert('Enter the category title');
+        let id = this.state.todos.indexOf(this.state.focusElement);
+        let todos = this.state.todos;
+        todos[id].name = this.state.modalName;
+        this.setState({
+            todos: todos,
+        });
+        this.modalClose();
+    }
+
+    editTodo = () => {
+        console.log('editTodo');
+        if (!this.state.modalName) return alert('Enter the TODO title');
+        let id = this.state.todos.indexOf(this.state.todosView);
+        let todos = this.state.todos;
+        let todoID = this.state.todos[id].items.indexOf(this.state.focusElement);
+        todos[id].items[todoID].name = this.state.modalName;
+        todos[id].items[todoID].checked = this.state.modalCheck;
+        this.setState({
+            todos: todos,
+        });
+        this.modalClose();
+    }
+
+    /*Почему запуск 2 раза?*/
+    showDone = () => {
+        console.log('showDone');
+        console.log(this.state.todosView.items);
+        //if (this.state.todosView.items.length == 0) return alert('Please add a todos');
+        let todoItems = this.state.todosView.items;
+        todoItems = todoItems.filter((el) => {
+           return el.checked;
+        });
+        this.setState({
+            todosView: todoItems,
         });
     }
 
@@ -262,7 +316,10 @@ class App extends Component {
                                     <div className="app__right">
                                         <div className="r ai-c cp-5">
                                             <div className="col-15">
-                                                <CheckButton text="Show more"/>
+                                                <CheckButton
+                                                    text="Show done"
+                                                    showDone={this.showDone}
+                                                />
                                             </div>
                                             <div className="col-40">
                                                 <SearchBlock placeholderName="Search" />
@@ -300,7 +357,11 @@ class App extends Component {
 
                                 <div className="col-70">
                                     <div className="app__body-right">
-                                        <TodosView todosView={this.state.todosView} todos={this.state.todos} />
+                                        <TodosView
+                                            todosView={this.state.todosView}
+                                            todos={this.state.todos}
+                                            modalOpen={this.modalOpen}
+                                        />
                                     </div>
                                 </div>
 
@@ -310,6 +371,7 @@ class App extends Component {
                     </div>
                 </section>
                 <Modal
+                    todos={this.state.todos}
                     modal={this.state.modal}
                     modalClose={this.modalClose}
                     modalHidden={this.state.modalHidden}
@@ -317,8 +379,12 @@ class App extends Component {
                     modalEditCat={this.state.modalEditCat}
                     modalEditTodo={this.state.modalEditTodo}
                     addSubCategory={this.addSubCategory}
+                    editCategory={this.editCategory}
+                    editTodo={this.editTodo}
                     modalName={this.state.modalName}
                     modalNameChange={this.modalNameChange}
+                    modalCheckChange={this.modalCheckChange}
+                    modalCheck={this.state.modalCheck}
                 />
             </React.Fragment>
         );
