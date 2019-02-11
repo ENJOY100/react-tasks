@@ -17,6 +17,7 @@ class App extends Component {
         this.state = {
             todos: [],
             todosView: null,
+            todosSave: null,
             focusElement: null,
             addCatValue: '',
             addTodoValue: '',
@@ -28,6 +29,9 @@ class App extends Component {
             modalName: '',
             modalCheck: false,
             selectedCategory: null,
+            searchValue: '',
+            showDoneValue: false,
+            testValue: false,
         }
     }
 
@@ -49,6 +53,38 @@ class App extends Component {
     addTodoValueChange = (event) => {
         this.setState({
             addTodoValue: event.target.value,
+        });
+    }
+
+    searchValueChange = (event) => {
+        if (!this.state.todosView) {
+            alert('Choose a category');
+        } else if (this.state.todosView && !this.state.todosView.items.length) {
+            alert('Add a todos');
+        } else {
+            this.setState({
+                searchValue: event.target.value,
+            });
+        }
+    }
+
+    showDownValueChange = (event) => {
+        /*КОРОЧЕ ПЕРЕДЕЛАТЬ*/
+        console.log('showDownValueChange');
+        console.log(event.target.checked);
+        let todosView, todosItems;
+        if (event.target.checked) {
+            todosView = this.state.todosView;
+            todosItems = todosView.items.filter((el) => {
+                return el.checked;
+            });
+            todosView.items = todosItems;
+        } else {
+            todosView = this.state.todosSave;
+        }
+        this.setState({
+            showDownValue: event.target.value,
+            //todosView: todosView,
         });
     }
 
@@ -93,10 +129,14 @@ class App extends Component {
         console.log(el);
         console.log('showTodos');
         console.log(this.state.todos.indexOf(el));
+        this.setState({
+            searchValue: '',
+        });
         let id = this.state.todos.indexOf(el);
         let todosView = this.state.todos[id];
         this.setState({
             todosView: todosView,
+            todosSave: todosView,
         });
         //console.log(event.target);
     }
@@ -275,8 +315,8 @@ class App extends Component {
         this.modalClose();
     }
 
-    showDone = (event) => {
-        /*ПЕРЕДЕЛАТЬ*/
+    /*showDone = (event) => {
+        /!*ПЕРЕДЕЛАТЬ*!/
         console.log('showDone');
         console.log(this.state.todosView);
         //console.log(this.state.todosView.items);
@@ -298,7 +338,7 @@ class App extends Component {
         this.setState({
             todosView: todosView,
         });
-    }
+    }*/
 
     selectCategory = (el, event) => {
         console.log('selectCategory');
@@ -312,6 +352,19 @@ class App extends Component {
             selectedCategory: todos[id],
         });
         //event.stopPropagation();
+    }
+
+    clearSearchInput = () => {
+        this.setState({
+            searchValue: '',
+        });
+    }
+
+    testChanger = () => {
+        console.log('testChanger');
+        this.setState(state => ({
+            testValue: !state.testValue,
+        }));
     }
 
     componentDidMount() {
@@ -331,6 +384,7 @@ class App extends Component {
         return (
             <React.Fragment>
                 <section className="app">
+                    {this.state.testValue ? 'Show' : 'Hide'}
                     <div className="c">
 
                         <div className="app__header ptb-20">
@@ -352,11 +406,20 @@ class App extends Component {
                                             <div className="col-15">
                                                 <CheckButton
                                                     text="Show done"
-                                                    showDone={this.showDone}
+                                                    showDownValue={this.state.showDownValue}
+                                                    showDownValueChange={this.showDownValueChange}
+                                                    testValue={this.state.testValue}
+                                                    testChanger={this.testChanger}
                                                 />
                                             </div>
                                             <div className="col-40">
-                                                <SearchBlock placeholderName="Search" />
+                                                <SearchBlock
+                                                    placeholderName="Search"
+                                                    searchValue={this.state.searchValue}
+                                                    searchValueChange={this.searchValueChange}
+                                                    clearSearchInput={this.clearSearchInput}
+                                                    searchTodos={this.searchTodos}
+                                                />
                                             </div>
                                             <div className="col-45">
                                                 <InsertBlock
@@ -395,6 +458,8 @@ class App extends Component {
                                             todosView={this.state.todosView}
                                             todos={this.state.todos}
                                             modalOpen={this.modalOpen}
+                                            searchValue={this.state.searchValue}
+                                            showDoneValue={this.state.showDoneValue}
                                         />
                                     </div>
                                 </div>

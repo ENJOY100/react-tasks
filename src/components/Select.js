@@ -28,7 +28,7 @@ class Select extends Component {
         })
     }
     render() {
-        let selected = this.props.selectedCategory ? this.props.selectedCategory.name : 'Выберите категорию';
+        let selected = this.props.selectedCategory ? this.props.selectedCategory.name : 'Choose a category';
         return(
             <div className={this.state.selectClass} onClick={this.selectOpen}>
                 <div className="select__title">

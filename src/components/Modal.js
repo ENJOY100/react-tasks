@@ -25,7 +25,7 @@ class Modal extends Component {
                         <div className="modal__body">
 
                             <div className="modal__line">
-                                <div className="r">
+                                <div className="r ai-c">
                                     <div className="col-30">
                                         <label>Name:</label>
                                     </div>
@@ -37,7 +37,12 @@ class Modal extends Component {
 
                             { this.props.modalEditTodo &&
                                 <div className="modal__line">
-                                    <input className="modal__checkbox" type="checkbox" defaultChecked={this.props.modalCheck} onChange={this.props.modalCheckChange} readOnly={this.props.modalCheck}/>
+                                    <input
+                                        className="modal__checkbox"
+                                        type="checkbox"
+                                        defaultChecked={this.props.modalCheck}
+                                        onChange={this.props.modalCheckChange}
+                                    />
                                 </div>
                             }
 
@@ -66,13 +71,13 @@ class Modal extends Component {
                             <div className="modal__line">
 
                                 { this.props.modalAdd &&
-                                <button className="btn btn--action btn--save" onClick={this.props.addSubCategory}>Сохранить</button>
+                                    <button className="btn btn--action btn--save" onClick={this.props.addSubCategory}>Save</button>
                                 }
                                 { this.props.modalEditCat &&
-                                <button className="btn btn--action btn--change" onClick={this.props.editCategory}>Изменить</button>
+                                    <button className="btn btn--action btn--change" onClick={this.props.editCategory}>Save</button>
                                 }
                                 { this.props.modalEditTodo &&
-                                <button className="btn btn--action btn--change" onClick={this.props.editTodo}>Изменить</button>
+                                    <button className="btn btn--action btn--change" onClick={this.props.editTodo}>Save</button>
                                 }
 
                             </div>

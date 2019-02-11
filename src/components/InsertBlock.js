@@ -16,7 +16,7 @@ class InsertBlock extends Component {
         }
         return (
             <div className="insert-block" style={this.props.style}>
-                <input value={value} onChange={changeEvent} className="insert-block__input" type="text" placeholder={this.props.placeholderName} />
+                <input value={value} onChange={(event) => changeEvent(event)} className="insert-block__input" type="text" placeholder={this.props.placeholderName} />
                 <button className="insert-block__btn" onClick={clickEvent}>
                     Add
                 </button>
