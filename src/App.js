@@ -30,7 +30,7 @@ class App extends Component {
             modalCheck: false,
             selectedCategory: null,
             searchValue: '',
-            showDoneValue: 'hidden',
+            showDoneValue: false,
             //showDoneValue: false,
             //testValue: false,
         }
@@ -69,22 +69,9 @@ class App extends Component {
     }
 
     showDownValueChange = (event) => {
-        /*КОРОЧЕ ПЕРЕДЕЛАТЬ*/
         console.log('showDownValueChange');
-        console.log(event.target.checked);
-        let todosView, todosItems;
-        if (event.target.checked) {
-            todosView = this.state.todosView;
-            todosItems = todosView.items.filter((el) => {
-                return el.checked;
-            });
-            todosView.items = todosItems;
-        } else {
-            todosView = this.state.todosSave;
-        }
         this.setState({
-            showDownValue: event.target.value,
-            //todosView: todosView,
+            showDoneValue: event.target.checked,
         });
     }
 
@@ -131,12 +118,12 @@ class App extends Component {
         console.log(this.state.todos.indexOf(el));
         this.setState({
             searchValue: '',
+            showDoneValue: false,
         });
         let id = this.state.todos.indexOf(el);
         let todosView = this.state.todos[id];
         this.setState({
             todosView: todosView,
-            todosSave: todosView,
         });
         //console.log(event.target);
     }
@@ -148,10 +135,9 @@ class App extends Component {
         let id = this.state.todos.indexOf(this.state.todosView);
         let todos = this.state.todos;
         todos[id].items.push({
-            id: Math.random(), // ???
+            id: Math.random(),
             name: this.state.addTodoValue,
             checked: false,
-            hidden: false,
         })
         this.setState({
             todos: todos,
@@ -315,7 +301,7 @@ class App extends Component {
         this.modalClose();
     }
 
-    showDone = () => {
+    /*showDone = () => {
         console.log('showDone');
         let showDoneValue = this.state.showDoneValue;
         if (showDoneValue === 'hidden') {
@@ -326,7 +312,7 @@ class App extends Component {
         this.setState({
             showDoneValue: showDoneValue,
         });
-    }
+    }*/
 
     /*showDone = (event) => {
         //ПЕРЕДЕЛАТЬ
@@ -373,13 +359,6 @@ class App extends Component {
         });
     }
 
-    testChanger = () => {
-        console.log('testChanger');
-        this.setState(state => ({
-            testValue: !state.testValue,
-        }));
-    }
-
     componentDidMount() {
         document.addEventListener('mouseup', this.modalMU);
     }
@@ -397,7 +376,6 @@ class App extends Component {
         return (
             <React.Fragment>
                 <section className="app">
-                    {this.state.showDoneValue}
                     <div className="c">
 
                         <div className="app__header ptb-20">
