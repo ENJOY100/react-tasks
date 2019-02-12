@@ -1,0 +1,12 @@
+body {
+  font-size: 12px;
+  font-family: sans-serif;
+}
+.app {
+    &__body {
+        height: calc(100vh - 67px);
+    }
+    &__body-left, &__body-right {
+        overflow-y: auto;
+    }
+}

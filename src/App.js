@@ -1,15 +1,17 @@
 import React, {Component} from 'react';
+import './App.scss';
+import 'aline.css/dist/aline.min.css';
+import 'font-awesome/css/font-awesome.min.css';
 
-import InsertBlock from './components/InsertBlock';
-import CheckButton from './components/CheckButton';
-import SearchBlock from './components/SearchBlock';
-import TodosTree from './components/TodosTree';
-import TodosView from './components/TodosView';
+import InsertBlock from './components/insert-block';
+import CheckButton from './components/checkbtn';
+import SearchBlock from './components/search-block';
+import TodosTree from './components/todos/tree';
+import TodosView from './components/todos/view';
 
-import '../node_modules/aline.css/dist/aline.min.css';
-import '../node_modules/font-awesome/css/font-awesome.min.css';
-import './assets/css/core.css';
-import Modal from "./components/Modal";
+import Modal from "./components/modal";
+
+import Category from './utils/category'
 
 class App extends Component {
     constructor() {
@@ -22,9 +24,7 @@ class App extends Component {
             addTodoValue: '',
             modalHidden: true,
             modal: React.createRef(),
-            modalAdd: false,
-            modalEditCat: false,
-            modalEditTodo: false,
+            modalStatus: '',
             modalNameValue: '',
             modalCheckValue: false,
             selectedCategory: null,
@@ -33,37 +33,34 @@ class App extends Component {
         }
     }
 
-    Category(name, parentID) {
-        this.id = Math.floor(Math.random() * (10**10 - 10 + 1) + 10);
-        this.name = name;
-        this.items = [];
-        this.opened = false;
-        this.parentID = parentID;
-    }
-
+    // zbs
     inputValueHandler = (event, name) => {
-        let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
         this.setState({
             [name]: value,
         })
     }
 
+    // zbs
     inputValueClear = (name) => {
         this.setState({
             [name]: '',
         });
     }
 
+    // zbs
     modalMU = (e) => {
         if (!this.state.modal.current.contains(e.target) && !this.state.modalHidden) {
             this.modalClose();
         }
     }
 
+    // zbs
     searchValueChange = (event) => {
-        if (!this.state.todosView) {
+        const { todosView } = this.state;
+        if (!todosView) {
             alert('Choose a category');
-        } else if (this.state.todosView && !this.state.todosView.items.length) {
+        } else if (todosView && !todosView.items.length) {
             alert('Add a todos');
         } else {
             this.setState({
@@ -72,10 +69,11 @@ class App extends Component {
         }
     }
 
+    // zbs
     addCategory = () => {
-        if (!this.state.addCatValue) return alert('Enter caterogy title');
-        let todos = this.state.todos;
-        let newCat = new this.Category(this.state.addCatValue);
+        const { todos, addCatValue } = this.state;
+        if (!addCatValue) return alert('Enter caterogy title');
+        const newCat = new Category(addCatValue);
         todos.push(newCat);
         this.setState({
             todos: todos,
@@ -83,26 +81,30 @@ class App extends Component {
         this.inputValueClear('addCatValue');
     }
 
+    // zbs
     showTodos = (el, event) => {
+        const { todos } = this.state;
+        const id = todos.indexOf(el);
+        const todosView = todos[id];
         this.setState({
             searchValue: '',
             showDoneValue: false,
         });
-        let id = this.state.todos.indexOf(el);
-        let todosView = this.state.todos[id];
         this.setState({
             todosView: todosView,
         });
     }
 
+    // zbs
     addTodo = () => {
-        if (!this.state.todosView) return alert('Choose category');
-        if (!this.state.addTodoValue) return alert('Enter Todo title');
-        let id = this.state.todos.indexOf(this.state.todosView);
-        let todos = this.state.todos;
+        const { todos, todosView, addTodoValue } = this.state;
+        const id = todos.indexOf(todosView);
+
+        if (!todosView) return alert('Choose category');
+        if (!addTodoValue) return alert('Enter Todo title');
         todos[id].items.push({
             id: Math.floor(Math.random() * (10**10 - 10 + 1) + 10),
-            name: this.state.addTodoValue,
+            name: addTodoValue,
             checked: false,
         })
         this.setState({
@@ -111,14 +113,15 @@ class App extends Component {
         this.inputValueClear('addTodoValue');
     }
 
+    // zbs
     deleteCategory = (el, event) => {
-        let id = this.state.todos.indexOf(el);
-        let todos = this.state.todos;
+        const { todos, todosView } = this.state;
+        const id = todos.indexOf(el);
         todos.splice(id, 1);
         this.setState({
             todos: todos,
         });
-        if (this.state.todosView === el) {
+        if (todosView === el) {
             this.setState({
                 todosView: null
             });
@@ -126,11 +129,12 @@ class App extends Component {
         event.stopPropagation();
     }
 
+    // zbs
     addSubCategory = () => {
-        if (!this.state.modalNameValue) return alert('Enter the category title');
-        let id = this.state.todos.indexOf(this.state.focusElement);
-        let todos = this.state.todos;
-        let newCat = new this.Category(this.state.modalNameValue, todos[id].id);
+        const { todos, modalNameValue, focusElement } = this.state;
+        if (!modalNameValue) return alert('Enter the category title');
+        const id = todos.indexOf(focusElement);
+        const newCat = new Category(modalNameValue, todos[id].id);
         todos.push(newCat);
         this.setState({
             todos: todos,
@@ -138,26 +142,27 @@ class App extends Component {
         this.modalClose();
     }
 
+    // zbs
     modalOpen = (preset, el, event, parent) => {
         switch (preset) {
             case 'add': {
                 this.setState({
-                    modalAdd: true,
+                    modalStatus: preset,
                     focusElement: el,
                 });
                 break;
             }
-            case 'editcat': {
+            case 'edit': {
                 this.setState({
-                    modalEditCat: true,
+                    modalStatus: preset,
                     focusElement: el,
                     modalNameValue: el.name,
                 });
                 break;
             }
-            case 'edittodo': {
+            case 'edit-todo': {
                 this.setState({
-                    modalEditTodo: true,
+                    modalStatus: preset,
                     focusElement: el,
                     modalNameValue: el.name,
                     modalCheckValue: el.checked,
@@ -171,12 +176,11 @@ class App extends Component {
         event.stopPropagation();
     }
 
+    // zbs
     modalClose = () => {
         this.setState({
             modalHidden: true,
-            modalAdd: false,
-            modalEditCat: false,
-            modalEditTodo: false,
+            modalStatus: '',
             modalNameValue: '',
             modalCheckValue: false,
             focusElement: null,
@@ -184,9 +188,10 @@ class App extends Component {
         });
     }
 
+    // zbs
     openList = (el, event) => {
-        let id = this.state.todos.indexOf(el);
-        let todos = this.state.todos;
+        const { todos } = this.state;
+        const id = todos.indexOf(el);
         todos[id].opened = !todos[id].opened;
         this.setState({
             todos: todos,
@@ -194,10 +199,11 @@ class App extends Component {
         event.stopPropagation();
     }
 
+    // zbs
     editCategory = () => {
-        if (!this.state.modalNameValue) return alert('Enter the category title');
-        let id = this.state.todos.indexOf(this.state.focusElement);
-        let todos = this.state.todos;
+        const { todos, modalNameValue, focusElement } = this.state;
+        if (!modalNameValue) return alert('Enter the category title');
+        const id = todos.indexOf(focusElement);
         todos[id].name = this.state.modalNameValue;
         this.setState({
             todos: todos,
@@ -205,20 +211,21 @@ class App extends Component {
         this.modalClose();
     }
 
+    // zbs
     editTodo = () => {
-        if (!this.state.modalNameValue) return alert('Enter the Todo title');
+        const { todos, todosView, focusElement, modalNameValue, modalCheckValue, selectedCategory } = this.state;
+        const id = todos.indexOf(todosView);
 
-        let id = this.state.todos.indexOf(this.state.todosView);
-        let todos = this.state.todos;
-        let todoID = this.state.todos[id].items.indexOf(this.state.focusElement);
+        if (!modalNameValue) return alert('Enter the Todo title');
 
-        let todoEL = this.state.focusElement;
+        const todoID = todos[id].items.indexOf(focusElement);
+        const todoEL = focusElement;
 
-        todoEL.name = this.state.modalNameValue;
-        todoEL.checked = this.state.modalCheckValue;
+        todoEL.name = modalNameValue;
+        todoEL.checked = modalCheckValue;
 
-        if (this.state.selectedCategory) {
-            let selectedID = this.state.todos.indexOf(this.state.selectedCategory);
+        if (selectedCategory) {
+            const selectedID = todos.indexOf(selectedCategory);
             todos[selectedID].items.push(todoEL);
             todos[id].items.splice(todoID, 1);
             this.setState({
@@ -234,17 +241,23 @@ class App extends Component {
         this.modalClose();
     }
 
+    // zbs
     selectCategory = (el, event) => {
-        let id = this.state.todos.indexOf(el);
-        let todos = this.state.todos;
-
+        const { todos } = this.state;
+        const id = todos.indexOf(el);
         this.setState({
             selectedCategory: todos[id],
         });
     }
 
+    // zbs
     componentDidMount() {
         document.addEventListener('mouseup', this.modalMU);
+    }
+
+    //zbs
+    componentWillUnmount() {
+        document.removeEventListener('mouseup', this.modalMU);
     }
 
     render() {
@@ -259,7 +272,7 @@ class App extends Component {
                                 <div className="col-30">
                                     <div className="app__left">
                                         <InsertBlock
-                                            placeholderName="Enter category titles" style={{width: '80%'}}
+                                            placeholderName="Enter category titles"
                                             clickEvent={this.addCategory}
                                             changeEvent={this.inputValueHandler}
                                             value={this.state.addCatValue}
@@ -290,7 +303,7 @@ class App extends Component {
                                             </div>
                                             <div className="col-45">
                                                 <InsertBlock
-                                                    placeholderName="Text input with button" style={{width: '100%'}}
+                                                    placeholderName="Text input with button"
                                                     clickEvent={this.addTodo}
                                                     changeEvent={this.inputValueHandler}
                                                     value={this.state.addTodoValue}
@@ -343,10 +356,8 @@ class App extends Component {
                     selectCategory={this.selectCategory}
                     modal={this.state.modal}
                     modalClose={this.modalClose}
+                    modalStatus={this.state.modalStatus}
                     modalHidden={this.state.modalHidden}
-                    modalAdd={this.state.modalAdd}
-                    modalEditCat={this.state.modalEditCat}
-                    modalEditTodo={this.state.modalEditTodo}
                     addSubCategory={this.addSubCategory}
                     editCategory={this.editCategory}
                     editTodo={this.editTodo}

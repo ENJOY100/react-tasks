@@ -1,0 +1,45 @@
+.tree-list {
+    padding: 0;
+    margin: 0;
+
+    &__select-item &__body {
+        padding: 2px;
+    }
+    &__body {
+        cursor: pointer;
+        padding: 5px;
+        border: 1px solid #333;
+        margin-top: -1px;
+    }
+    &__item &__body:hover {
+        background-color: #f5f5f5;
+        border: 1px solid #333;
+    }
+    &__button {
+        display: inline-block;
+    }
+    &__item {
+        display: block;
+        .tree-list {
+            margin-left: 7%;
+            display: none;
+        }
+    }
+    &__name {
+        font-weight: bold;
+        display: inline-block;
+        padding: 0 5px;
+    }
+    &__item.opened > .tree-list {
+        display: block;
+    }
+    &__item.opened > &__body .btn-ui--open {
+        transform: rotateZ(180deg);
+    }
+    &__select-item .tree-list {
+        display: block;
+    }
+    .tree > & > :first-child > &__body {
+        margin-top: 0;
+    }
+}
