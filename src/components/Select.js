@@ -12,8 +12,6 @@ class Select extends Component {
         }
     }
     selectOpen = () => {
-        console.log('selectOpen');
-        console.log(this.state.selectOpened);
         let opened, selectClass, state;
         state = this.state.selectOpened;
         state = !state;
@@ -28,7 +26,7 @@ class Select extends Component {
         })
     }
     render() {
-        let selected = this.props.selectedCategory ? this.props.selectedCategory.name : 'Choose a category';
+        let selected = this.props.selectedCategory ? this.props.selectedCategory.name : 'Move to category';
         return(
             <div className={this.state.selectClass} onClick={this.selectOpen}>
                 <div className="select__title">

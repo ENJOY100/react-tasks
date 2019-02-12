@@ -7,11 +7,9 @@ class TodosTreeItem extends Component {
     render() {
         let treeClickEvent, todosTreeItemClass;
         let childrenCat = this.props.todos.filter((el) => {
-            return el.parentID == this.props.el.id;
+            return el.parentID === this.props.el.id;
         });
         let todosState = this.props.el.opened && childrenCat.length > 0 ? 'opened' : '';
-
-        let isopened = this.props.el.opened && childrenCat.length ? 'opened' : 'closed'; // индикатор, удалить после завершения
 
         if (this.props.showTodos) {
             treeClickEvent = this.props.showTodos;
@@ -56,7 +54,6 @@ class TodosTreeItem extends Component {
                                     <Button preset="edit" />
                                 </div>
                             }
-                            {isopened}
                         </div>
                         <div className="col-45 t-r">
                             { this.props.deleteCategory &&

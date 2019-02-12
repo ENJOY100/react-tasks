@@ -6,10 +6,10 @@ class CheckButton extends Component {
         return (
             <label className="check-button">
              <input
-                 defaultChecked={this.props.showDoneValue}
+                 checked={this.props.showDoneValue}
                  className="check-button__checkbox"
                  type="checkbox"
-                 onChange={(event) => this.props.showDownValueChange(event)}
+                 onChange={(event) => this.props.changeEvent(event, this.props.name)}
              />
              <span className="check-button__text">
                  { this.props.text }

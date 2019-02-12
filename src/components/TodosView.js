@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Button from './Button';
+import TodoItem from './TodoItem';
 import '../assets/core_blocks/TodosView.css';
 
 class TodosView extends Component {
@@ -24,23 +24,11 @@ class TodosView extends Component {
 
         if (this.props.todosView && this.props.todosView.items) {
             todosFetch = todosFetch.map(el =>
-                <li key={el.id} className="todo-list__item todo">
-                    <div className="r ai-c">
-                        <div className="col-10 t-c">
-                            <input className="todo__checkbox" type="checkbox" checked={el.checked} readOnly/>
-                        </div>
-                        <div className="col-80">
-                            <div className="todo__name">
-                                {el.name}
-                            </div>
-                        </div>
-                        <div className="col-10 t-c">
-                            <div className="todo__button" onClick={(event) => this.props.modalOpen('edittodo', el, event)}>
-                                <Button preset="edit" />
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                <TodoItem
+                    key={el.id}
+                    el={el}
+                    modalOpen={this.props.modalOpen}
+                />
             );
 
             let alertText;

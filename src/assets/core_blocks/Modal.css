@@ -64,12 +64,6 @@
     width: 100%;
     padding: 3px 10px;
 }
-/*.btn--edit, .btn--delete {
-    display: block;
-}
-.btn--edit {
-    margin-bottom: 5px;
-}*/
 .btn--action {
     cursor: pointer;
     padding: 5px 15px;

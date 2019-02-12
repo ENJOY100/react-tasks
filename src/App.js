@@ -17,7 +17,6 @@ class App extends Component {
         this.state = {
             todos: [],
             todosView: null,
-            //todosSave: null,
             focusElement: null,
             addCatValue: '',
             addTodoValue: '',
@@ -26,34 +25,39 @@ class App extends Component {
             modalAdd: false,
             modalEditCat: false,
             modalEditTodo: false,
-            modalName: '',
-            modalCheck: false,
+            modalNameValue: '',
+            modalCheckValue: false,
             selectedCategory: null,
             searchValue: '',
             showDoneValue: false,
-            //showDoneValue: false,
-            //testValue: false,
         }
     }
 
     Category(name, parentID) {
-        this.id = Math.random();
+        this.id = Math.floor(Math.random() * (10**10 - 10 + 1) + 10);
         this.name = name;
         this.items = [];
         this.opened = false;
         this.parentID = parentID;
     }
 
-    addCatValueChange = (event) => {
+    inputValueHandler = (event, name) => {
+        let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
         this.setState({
-            addCatValue: event.target.value,
+            [name]: value,
+        })
+    }
+
+    inputValueClear = (name) => {
+        this.setState({
+            [name]: '',
         });
     }
 
-    addTodoValueChange = (event) => {
-        this.setState({
-            addTodoValue: event.target.value,
-        });
+    modalMU = (e) => {
+        if (!this.state.modal.current.contains(e.target) && !this.state.modalHidden) {
+            this.modalClose();
+        }
     }
 
     searchValueChange = (event) => {
@@ -68,40 +72,7 @@ class App extends Component {
         }
     }
 
-    showDownValueChange = (event) => {
-        console.log('showDownValueChange');
-        this.setState({
-            showDoneValue: event.target.checked,
-        });
-    }
-
-    // МОЖЕТ УПРОСТИТЬ эти инпут функции ???
-    modalNameChange = (event) => {
-        this.setState({
-            modalName: event.target.value,
-        });
-    }
-
-    modalCheckChange = (event) => {
-        this.setState({
-            modalCheck: event.target.checked,
-        });
-    }
-
-    addCatValueClear = () => {
-        this.setState({
-            addCatValue: '',
-        });
-    }
-
-    addTodoValueClear = () => {
-        this.setState({
-            addTodoValue: '',
-        });
-    }
-
     addCategory = () => {
-        console.log('addCategory');
         if (!this.state.addCatValue) return alert('Enter caterogy title');
         let todos = this.state.todos;
         let newCat = new this.Category(this.state.addCatValue);
@@ -109,13 +80,10 @@ class App extends Component {
         this.setState({
             todos: todos,
         });
-        this.addCatValueClear();
+        this.inputValueClear('addCatValue');
     }
 
     showTodos = (el, event) => {
-        console.log(el);
-        console.log('showTodos');
-        console.log(this.state.todos.indexOf(el));
         this.setState({
             searchValue: '',
             showDoneValue: false,
@@ -125,75 +93,57 @@ class App extends Component {
         this.setState({
             todosView: todosView,
         });
-        //console.log(event.target);
     }
 
     addTodo = () => {
-        console.log('AddTodo');
         if (!this.state.todosView) return alert('Choose category');
-        if (!this.state.addTodoValue) return alert('Enter TODO title');
+        if (!this.state.addTodoValue) return alert('Enter Todo title');
         let id = this.state.todos.indexOf(this.state.todosView);
         let todos = this.state.todos;
         todos[id].items.push({
-            id: Math.random(),
+            id: Math.floor(Math.random() * (10**10 - 10 + 1) + 10),
             name: this.state.addTodoValue,
             checked: false,
         })
         this.setState({
             todos: todos,
-            //todosView: todos[id], // это по сути не нужно
         })
-        this.addTodoValueClear();
+        this.inputValueClear('addTodoValue');
     }
 
     deleteCategory = (el, event) => {
-        //console.log(event);
-        //event.stopPropagation();
-        //console.log('Delete category');
-        //console.log(el);
         let id = this.state.todos.indexOf(el);
         let todos = this.state.todos;
         todos.splice(id, 1);
         this.setState({
             todos: todos,
         });
-        if (this.state.todosView == el) {
+        if (this.state.todosView === el) {
             this.setState({
                 todosView: null
             });
         }
-        //console.log(id);
         event.stopPropagation();
     }
 
     addSubCategory = () => {
-        console.log('addSubCategory');
-        console.log(this.state.modalName);
-        console.log(this.state.focusElement);
-        if (!this.state.modalName) return alert('Enter the category title');
+        if (!this.state.modalNameValue) return alert('Enter the category title');
         let id = this.state.todos.indexOf(this.state.focusElement);
         let todos = this.state.todos;
-        let newCat = new this.Category(this.state.modalName, todos[id].id);
+        let newCat = new this.Category(this.state.modalNameValue, todos[id].id);
         todos.push(newCat);
         this.setState({
             todos: todos,
         });
         this.modalClose();
-        //console.log(todos[id]);
     }
 
     modalOpen = (preset, el, event, parent) => {
-        console.log('modalOpen');
-        //console.log(parentID);
-        //let id = this.state.todos.indexOf(el);
-        //let todos = this.state.todos;
         switch (preset) {
             case 'add': {
-                //if (!parentID) return;
                 this.setState({
                     modalAdd: true,
                     focusElement: el,
-                    //modalName: todos[id].name,
                 });
                 break;
             }
@@ -201,24 +151,20 @@ class App extends Component {
                 this.setState({
                     modalEditCat: true,
                     focusElement: el,
-                    modalName: el.name,
+                    modalNameValue: el.name,
                 });
                 break;
             }
             case 'edittodo': {
-                console.log(el);
-                console.log(this.state.modalCheck);
                 this.setState({
                     modalEditTodo: true,
                     focusElement: el,
-                    modalName: el.name,
-                    modalCheck: el.checked,
+                    modalNameValue: el.name,
+                    modalCheckValue: el.checked,
                 });
-                console.log(this.state.modalCheck);
                 break;
             }
         }
-        //console.log('modalOpen');
         this.setState({
             modalHidden: false,
         });
@@ -231,25 +177,14 @@ class App extends Component {
             modalAdd: false,
             modalEditCat: false,
             modalEditTodo: false,
-            modalName: '',
-            modalCheck: false,
+            modalNameValue: '',
+            modalCheckValue: false,
             focusElement: null,
             selectedCategory: null,
         });
-        /*this.setState({
-            task_params_name: '',
-            task_params_date: '',
-        })*/
-    }
-
-    modalMU = (e) => {
-        if (!this.state.modal.current.contains(e.target) && !this.state.modalHidden) {
-            this.modalClose();
-        }
     }
 
     openList = (el, event) => {
-        console.log('openList');
         let id = this.state.todos.indexOf(el);
         let todos = this.state.todos;
         todos[id].opened = !todos[id].opened;
@@ -260,11 +195,10 @@ class App extends Component {
     }
 
     editCategory = () => {
-        console.log('editCategory');
-        if (!this.state.modalName) return alert('Enter the category title');
+        if (!this.state.modalNameValue) return alert('Enter the category title');
         let id = this.state.todos.indexOf(this.state.focusElement);
         let todos = this.state.todos;
-        todos[id].name = this.state.modalName;
+        todos[id].name = this.state.modalNameValue;
         this.setState({
             todos: todos,
         });
@@ -272,17 +206,16 @@ class App extends Component {
     }
 
     editTodo = () => {
-        console.log('editTodo');
-        if (!this.state.modalName) return alert('Enter the TODO title');
+        if (!this.state.modalNameValue) return alert('Enter the Todo title');
 
-        let id = this.state.todos.indexOf(this.state.todosView); // ID категории, показывающей TODOxи
+        let id = this.state.todos.indexOf(this.state.todosView);
         let todos = this.state.todos;
-        let todoID = this.state.todos[id].items.indexOf(this.state.focusElement); // ID выбранной TODOxи
+        let todoID = this.state.todos[id].items.indexOf(this.state.focusElement);
 
-        let todoEL = this.state.focusElement; // непосредственно наша TODOxа
+        let todoEL = this.state.focusElement;
 
-        todoEL.name = this.state.modalName;
-        todoEL.checked = this.state.modalCheck;
+        todoEL.name = this.state.modalNameValue;
+        todoEL.checked = this.state.modalCheckValue;
 
         if (this.state.selectedCategory) {
             let selectedID = this.state.todos.indexOf(this.state.selectedCategory);
@@ -301,76 +234,18 @@ class App extends Component {
         this.modalClose();
     }
 
-    /*showDone = () => {
-        console.log('showDone');
-        let showDoneValue = this.state.showDoneValue;
-        if (showDoneValue === 'hidden') {
-            showDoneValue = 'show';
-        } else if (showDoneValue === 'show') {
-            showDoneValue = 'hidden';
-        }
-        this.setState({
-            showDoneValue: showDoneValue,
-        });
-    }*/
-
-    /*showDone = (event) => {
-        //ПЕРЕДЕЛАТЬ
-        console.log('showDone');
-        console.log(this.state.todosView);
-        //console.log(this.state.todosView.items);
-        let todosView, todoItems;
-        if (!this.state.todosView) {
-            event.preventDefault();
-            alert('Please add a todos');
-        }
-        if (this.state.todosView.items.length > 0) {
-            todosView = this.state.todosView;
-            todoItems = todosView.items.filter((el) => {
-                return !el.checked;
-            });
-            console.log(todoItems);
-            for (let todo in todoItems) {
-                todoItems[todo].hidden = !todoItems[todo].hidden;
-            }
-        }
-        this.setState({
-            todosView: todosView,
-        });
-    }*/
-
     selectCategory = (el, event) => {
-        console.log('selectCategory');
-        console.log(el);
-        console.log(this.state.focusElement);
-
         let id = this.state.todos.indexOf(el);
         let todos = this.state.todos;
 
         this.setState({
             selectedCategory: todos[id],
         });
-        //event.stopPropagation();
-    }
-
-    clearSearchInput = () => {
-        this.setState({
-            searchValue: '',
-        });
     }
 
     componentDidMount() {
         document.addEventListener('mouseup', this.modalMU);
     }
-
-   /* componentWillMount() {
-        console.log(this.state.todos)
-    }*/
-
-    /*componentWillUpdate(nextProps, nextState, nextContext) {
-        console.log(`Will Update`);
-        console.log(this.state.todosView);
-    }*/
 
     render() {
         return (
@@ -385,9 +260,11 @@ class App extends Component {
                                     <div className="app__left">
                                         <InsertBlock
                                             placeholderName="Enter category titles" style={{width: '80%'}}
-                                            addCatValue={this.state.addCatValue}
-                                            addCategory={this.addCategory}
-                                            addCatValueChange={this.addCatValueChange}/>
+                                            clickEvent={this.addCategory}
+                                            changeEvent={this.inputValueHandler}
+                                            value={this.state.addCatValue}
+                                            name="addCatValue"
+                                        />
                                     </div>
                                 </div>
 
@@ -397,9 +274,9 @@ class App extends Component {
                                             <div className="col-15">
                                                 <CheckButton
                                                     text="Show done"
-                                                    showDownValue={this.state.showDownValue}
-                                                    showDownValueChange={this.showDownValueChange}
-                                                    showDone={this.showDone}
+                                                    name="showDoneValue"
+                                                    showDoneValue={this.state.showDoneValue}
+                                                    changeEvent={this.inputValueHandler}
                                                 />
                                             </div>
                                             <div className="col-40">
@@ -407,16 +284,17 @@ class App extends Component {
                                                     placeholderName="Search"
                                                     searchValue={this.state.searchValue}
                                                     searchValueChange={this.searchValueChange}
-                                                    clearSearchInput={this.clearSearchInput}
-                                                    searchTodos={this.searchTodos}
+                                                    clearSearchInput={this.inputValueClear}
+                                                    inputName="searchValue"
                                                 />
                                             </div>
                                             <div className="col-45">
                                                 <InsertBlock
                                                     placeholderName="Text input with button" style={{width: '100%'}}
-                                                    addTodoValue={this.state.addTodoValue}
-                                                    addTodo={this.addTodo}
-                                                    addTodoValueChange={this.addTodoValueChange}
+                                                    clickEvent={this.addTodo}
+                                                    changeEvent={this.inputValueHandler}
+                                                    value={this.state.addTodoValue}
+                                                    name="addTodoValue"
                                                 />
                                             </div>
                                         </div>
@@ -429,7 +307,7 @@ class App extends Component {
                         <div className="app__body pt-30">
                             <div className="r h-100 ai-str">
 
-                                <div className="col-30">
+                                <div className="col-30 h-100">
                                     <div className="app__body-left h-100">
                                         <TodosTree
                                             todos={this.state.todos}
@@ -442,8 +320,8 @@ class App extends Component {
                                     </div>
                                 </div>
 
-                                <div className="col-70">
-                                    <div className="app__body-right">
+                                <div className="col-70 h-100">
+                                    <div className="app__body-right h-100">
                                         <TodosView
                                             todosView={this.state.todosView}
                                             todos={this.state.todos}
@@ -472,10 +350,11 @@ class App extends Component {
                     addSubCategory={this.addSubCategory}
                     editCategory={this.editCategory}
                     editTodo={this.editTodo}
-                    modalName={this.state.modalName}
-                    modalNameChange={this.modalNameChange}
-                    modalCheckChange={this.modalCheckChange}
-                    modalCheck={this.state.modalCheck}
+                    modalNameValue={this.state.modalNameValue}
+                    modalCheckValue={this.state.modalCheckValue}
+                    inputName="modalNameValue"
+                    checkName="modalCheckValue"
+                    changeEvent={this.inputValueHandler}
                     selectedCategory={this.state.selectedCategory}
                 />
             </React.Fragment>

@@ -2,9 +2,6 @@
     display: flex;
     align-items: center;
     border: 1px solid #333;
-    /*-webkit-border-radius: 5px;*/
-    /*-moz-border-radius: 5px;*/
-    /*border-radius: 5px;*/
 }
 .search-block__input {
     border: none;

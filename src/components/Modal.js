@@ -30,7 +30,12 @@ class Modal extends Component {
                                         <label>Name:</label>
                                     </div>
                                     <div className="col-70">
-                                        <input value={this.props.modalName} onChange={this.props.modalNameChange} type="text" className="modal__input modal__input--name" />
+                                        <input
+                                            value={this.props.modalNameValue}
+                                            onChange={(event) => this.props.changeEvent(event, this.props.inputName)}
+                                            type="text"
+                                            className="modal__input modal__input--name"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -40,8 +45,8 @@ class Modal extends Component {
                                     <input
                                         className="modal__checkbox"
                                         type="checkbox"
-                                        defaultChecked={this.props.modalCheck}
-                                        onChange={this.props.modalCheckChange}
+                                        defaultChecked={this.props.modalCheckValue}
+                                        onChange={(event) => this.props.changeEvent(event, this.props.checkName)}
                                     />
                                 </div>
                             }
@@ -56,17 +61,6 @@ class Modal extends Component {
                                     />
                                 </div>
                             }
-
-                            {/*<div className="modal__line">
-                                <div className="r">
-                                    <div className="col-30">
-                                        <label className="modal__label">Дата:</label>
-                                    </div>
-                                    <div className="col-70">
-                                        <input value={this.props.task_params_date} onChange={this.props.taskDateChange} type="text" className="modal__input modal__input--date" />
-                                    </div>
-                                </div>
-                            </div>*/}
 
                             <div className="modal__line">
 

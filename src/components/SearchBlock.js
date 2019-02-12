@@ -11,7 +11,7 @@ class SearchBlock extends Component {
                        className="search-block__input" type="text" placeholder={this.props.placeholderName}
                 />
                 { this.props.searchValue &&
-                    <div className="search-block__button" onClick={(event) => this.props.clearSearchInput(event)}>
+                    <div className="search-block__button" onClick={() => this.props.clearSearchInput(this.props.inputName)}>
                         <Button preset="close" />
                     </div>
                 }
