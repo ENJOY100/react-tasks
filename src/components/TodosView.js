@@ -11,15 +11,15 @@ class TodosView extends Component {
             return modalClass;
         };
 
-        if (!this.props.testValue) {
+   /*     if (this.props.showDoneValue) {
             console.log('testValue is 1');
         } else {
             console.log('testValue is 0');
-        }
+        }*/
 
         if (this.props.todosView && this.props.todosView.items) {
-            // не работает, хз почему
-            if (this.props.showDownValue) {
+            // не работает, хз почему (ПОТОМУ ЧТО showDown!!!!!!!! не showDone!!!
+            if (this.props.showDoneValue === 'show') {
                 console.log('da1');
                 todosFetch = this.props.todosView.items.filter((el) => {
                     return el.checked;
@@ -79,6 +79,7 @@ class TodosView extends Component {
         }
         return (
             <ul className="todo-list">
+                <li>{this.props.showDoneValue}</li>
                 { todosView }
             </ul>
         )

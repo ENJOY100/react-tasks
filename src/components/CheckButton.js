@@ -6,34 +6,23 @@ class CheckButton extends Component {
         //let clickEvent;
         //if (this.props.showDone) clickEvent = this.props.showDone;
         {/*<label className="check-button">
-                <input
-                    value={this.props.showDoneValue}
-                    className="check-button__checkbox"
-                    type="checkbox"
-                    onChange={(event) => this.props.showDownValueChange(event)}
-                />
-                <span className="check-button__text">
+            <input
+                value={this.props.showDoneValue}
+                className="check-button__checkbox"
+                type="checkbox"
+                onChange={(event) => this.props.showDownValueChange(event)}
+            />
+            <span className="check-button__text">
                     { this.props.text }
                 </span>
-                { this.props.showDoneValue &&
-                    <span>checked</span>
-                }
-            </label>*/}
+            { this.props.showDoneValue &&
+            <span>checked</span>
+            }
+        </label>*/}
         return (
-            <label className="check-button">
-                <input
-                    value={this.props.showDoneValue}
-                    className="check-button__checkbox"
-                    type="checkbox"
-                    onChange={(event) => this.props.showDownValueChange(event)}
-                />
-                <span className="check-button__text">
-                    { this.props.text }
-                </span>
-                { this.props.showDoneValue &&
-                    <span>checked</span>
-                }
-            </label>
+            <div onClick={this.props.showDone}>
+                show done
+            </div>
         )
     }
 }

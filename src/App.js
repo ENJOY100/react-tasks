@@ -17,7 +17,7 @@ class App extends Component {
         this.state = {
             todos: [],
             todosView: null,
-            todosSave: null,
+            //todosSave: null,
             focusElement: null,
             addCatValue: '',
             addTodoValue: '',
@@ -30,15 +30,15 @@ class App extends Component {
             modalCheck: false,
             selectedCategory: null,
             searchValue: '',
-            showDoneValue: false,
-            testValue: false,
+            showDoneValue: 'hidden',
+            //showDoneValue: false,
+            //testValue: false,
         }
     }
 
     Category(name, parentID) {
         this.id = Math.random();
         this.name = name;
-        //this.children = [];
         this.items = [];
         this.opened = false;
         this.parentID = parentID;
@@ -315,8 +315,21 @@ class App extends Component {
         this.modalClose();
     }
 
+    showDone = () => {
+        console.log('showDone');
+        let showDoneValue = this.state.showDoneValue;
+        if (showDoneValue === 'hidden') {
+            showDoneValue = 'show';
+        } else if (showDoneValue === 'show') {
+            showDoneValue = 'hidden';
+        }
+        this.setState({
+            showDoneValue: showDoneValue,
+        });
+    }
+
     /*showDone = (event) => {
-        /!*ПЕРЕДЕЛАТЬ*!/
+        //ПЕРЕДЕЛАТЬ
         console.log('showDone');
         console.log(this.state.todosView);
         //console.log(this.state.todosView.items);
@@ -384,7 +397,7 @@ class App extends Component {
         return (
             <React.Fragment>
                 <section className="app">
-                    {this.state.testValue ? 'Show' : 'Hide'}
+                    {this.state.showDoneValue}
                     <div className="c">
 
                         <div className="app__header ptb-20">
@@ -408,8 +421,7 @@ class App extends Component {
                                                     text="Show done"
                                                     showDownValue={this.state.showDownValue}
                                                     showDownValueChange={this.showDownValueChange}
-                                                    testValue={this.state.testValue}
-                                                    testChanger={this.testChanger}
+                                                    showDone={this.showDone}
                                                 />
                                             </div>
                                             <div className="col-40">
