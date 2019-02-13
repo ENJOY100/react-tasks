@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import View from './button';
+import { View } from './button';
 import './button.scss';
 
 export default class Button extends Component {

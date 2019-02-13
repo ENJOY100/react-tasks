@@ -50,7 +50,8 @@
         width: 100%;
         padding: 3px 10px;
     }
-    &__checkbox {
+    &__checkbox, &__label {
+        user-select: none;
         cursor: pointer;
     }
 }

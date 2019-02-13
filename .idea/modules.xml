@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../lar-test/.idea/lar-test.iml" filepath="$PROJECT_DIR$/../lar-test/.idea/lar-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/my.iml" filepath="$PROJECT_DIR$/.idea/my.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../react-todos-example/.idea/react-todos-example.iml" filepath="$PROJECT_DIR$/../react-todos-example/.idea/react-todos-example.iml" />
     </modules>
   </component>
 </project>

@@ -1,22 +1,22 @@
-import React from 'react';
+//import React from 'react';
 
-const ModalTitle = (props) => {
-    let title = '';
-    switch (props.modalStatus) {
+const GetModalTitle = (props) => {
+    switch (props.modal.status) {
         case 'add': {
-            title = 'Add category';
-            break;
+            return 'Add category';
         }
         case 'edit': {
-            title = 'Edit category';
-            break;
+            return 'Edit category';
         }
         case 'edit-todo': {
-            title = 'Edit todo';
-            break;
+            return 'Edit todo';
+        }
+        default: {
+            return 'Edit'
         }
     }
-    return title;
 }
 
-export default ModalTitle;
+export default GetModalTitle;
+
+// REFACTORED

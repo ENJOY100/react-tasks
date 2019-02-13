@@ -3,6 +3,7 @@
     background-color: #e5e5e5;
     position: relative;
     cursor: pointer;
+    user-select: none;
 
     &__body {
         display: none;

@@ -7,34 +7,34 @@ export default class Select extends Component {
     constructor() {
         super();
         this.state = {
-            selectClass: 'select',
-            selectOpened: false,
+            select: {
+                class: 'select',
+                opened: false
+            }
         }
     }
     selectOpen = () => {
-        let { selectOpened, selectClass } = this.state;
+        let { select } = this.state;
 
-        let state = selectOpened;
-        state = !state;
+        select.opened = !select.opened;
 
-        const opened = selectOpened ? 'opened' : '';
-        selectClass = `select ${opened}`;
+        const opened = select.opened ? 'opened' : '';
+        select.class = `select ${opened}`;
 
         this.setState({
-            selectClass: 'select',
-            selectOpened: state,
+            select: {
+                class: select.class,
+                opened: select.opened
+            }
         });
-        this.setState({
-            selectClass: selectClass,
-        })
     }
     render() {
-        const { todos, selectCategory, selectedCategory, selectClass } = this.props;
-        const selected = selectedCategory ? selectedCategory.name : 'Move to category';
+        const { todos, selectCategory } = this.props;
+        const selectedName = todos.selected ? todos.selected.name : 'Move to category';
         return(
-            <div className={selectClass} onClick={this.selectOpen}>
+            <div className={this.state.select.class} onClick={this.selectOpen}>
                 <div className="select__title">
-                    { selected }
+                    { selectedName }
                 </div>
                 <div className="select__body">
                     <TodosTree

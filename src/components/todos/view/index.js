@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import TodoItem from '../todo-item';
+import { View } from './view';
 import './view.scss';
 
 export default class TodosView extends Component {
     render() {
-        let { todosView } = this.props;
-        const { showDoneValue, searchValue, modalOpen } = this.props;
-        let todosFetch;
+        const { todos, input, modalOpen, singleTodoCheck } = this.props;
+        let todosFetch, todosView;
+
+        todosView = todos.view;
 
         if (todosView && todosView.items) {
-            if (showDoneValue) {
+            if (input.showValue) {
                 todosFetch = todosView.items.filter((el) => {
                     return el.checked;
                 });
@@ -18,9 +20,9 @@ export default class TodosView extends Component {
             }
         }
 
-        if (searchValue && todosView && todosView.items) {
+        if (input.searchValue && todosView && todosView.items) {
             todosFetch = todosView.items.filter((el) => {
-                return el.name.indexOf(searchValue) !== -1;
+                return el.name.indexOf(input.searchValue) !== -1;
             });
         }
 
@@ -30,11 +32,12 @@ export default class TodosView extends Component {
                     key={el.id}
                     el={el}
                     modalOpen={modalOpen}
+                    singleTodoCheck={singleTodoCheck}
                 />
             );
 
             let alertText;
-            if (!todosFetch.length && searchValue || showDoneValue) {
+            if (!todosFetch.length && input.searchValue || input.showValue) {
                 alertText = 'No match found';
             } else if (!todosFetch.length) {
                 alertText = 'Todos is null, please add';
@@ -44,9 +47,7 @@ export default class TodosView extends Component {
 
         }
         return (
-            <ul className="todo-list">
-                { todosView }
-            </ul>
+            <View todosView={todosView} />
         )
     }
 }
