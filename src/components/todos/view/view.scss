@@ -1,7 +1,14 @@
 .todo-list {
-    padding: 0;
     margin: 0;
-}
-.todo-list > :last-child {
-    border-bottom: 1px solid #333;
+    padding: 0;
+    padding-top: 1px;
+    &__item {
+        display: block;
+        padding: 25px;
+        border: 1px solid var(--border-color);
+        margin: -1px 0;
+    }
+    &__item:hover {
+        background-color: var(--accent-h);
+    }
 }

@@ -7,19 +7,19 @@ $btn-view: (
 );
 
 .btn-ui {
-    border: 1px solid #ddd;
+    border: 1px solid var(--btn-border);
     display: inline-block;
     cursor: pointer;
     padding: 2px;
     margin: 2px;
     line-height: 1;
     &:hover {
-        background-color: #ddd;
+        background-color: var(--btn-hover);
     }
     &:before {
         font-family: FontAwesome;
         font-size: 12px;
-        color: #000;
+        color: var(--color-m);
     }
     @each $key, $value in $btn-view {
         &--#{$key}::before {

@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import TodoItem from '../todo-item';
 import { View } from './view';
+
 import './view.scss';
 
 export default class TodosView extends Component {
     render() {
-        const { todos, input, modalOpen, singleTodoCheck } = this.props;
+        const { todos, input, modalOpen, singleTodoCheck, slug } = this.props;
+        const historyCategory = todos.fetch.find(el => el.id == slug);
+        if (slug && !todos.view) todos.view = historyCategory;
+
         let todosFetch, todosView;
 
-        todosView = todos.view;
+        todosView = historyCategory;
 
         if (todosView && todosView.items) {
             if (input.showValue) {
@@ -22,7 +26,7 @@ export default class TodosView extends Component {
 
         if (input.searchValue && todosView && todosView.items) {
             todosFetch = todosView.items.filter((el) => {
-                return el.name.indexOf(input.searchValue) !== -1;
+                return el.name.includes(input.searchValue);
             });
         }
 
@@ -34,7 +38,7 @@ export default class TodosView extends Component {
                     modalOpen={modalOpen}
                     singleTodoCheck={singleTodoCheck}
                 />
-            );
+            )
 
             let alertText;
             if (!todosFetch.length && input.searchValue || input.showValue) {

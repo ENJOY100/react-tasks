@@ -11,11 +11,8 @@ ReactDOM.render(
     <Router>
         <App>
             <Switch>
-                <Route exact path="/" component={Todos}>
-                    {/*<Todos>
-                     <Route path="/:slug" component={TodosView} />
-                     </Todos>*/}
-                </Route>
+                <Route exact path="/" component={Todos} />
+                <Route path="/category/:slug" component={Todos} />
                 <Route path="*" component={Error} />
             </Switch>
         </App>

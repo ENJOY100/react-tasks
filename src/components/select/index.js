@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './select.scss';
+import { View } from "./select";
 
-import TodosTree from "../todos/tree";
+import './select.scss';
 
 export default class Select extends Component {
     constructor() {
@@ -14,7 +14,7 @@ export default class Select extends Component {
         }
     }
     selectOpen = () => {
-        let { select } = this.state;
+        const { select } = this.state;
 
         select.opened = !select.opened;
 
@@ -29,20 +29,13 @@ export default class Select extends Component {
         });
     }
     render() {
-        const { todos, selectCategory } = this.props;
-        const selectedName = todos.selected ? todos.selected.name : 'Move to category';
-        return(
-            <div className={this.state.select.class} onClick={this.selectOpen}>
-                <div className="select__title">
-                    { selectedName }
-                </div>
-                <div className="select__body">
-                    <TodosTree
-                        todos={todos}
-                        selectCategory={selectCategory}
-                    />
-                </div>
-            </div>
-        );
+        return (
+           <View
+                todos={this.props.todos}
+                selectCategory={this.props.selectCategory}
+                select={this.state.select}
+                selectOpen={this.selectOpen}
+           />
+        )
     }
 }

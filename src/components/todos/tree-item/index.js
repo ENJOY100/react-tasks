@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import '../tree/tree.scss';
-
 import { View } from './tree-item';
+
+import '../tree/tree.scss';
 
 export default class TodosTreeItem extends Component {
     render() {

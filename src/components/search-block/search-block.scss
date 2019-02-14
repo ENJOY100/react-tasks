@@ -1,8 +1,7 @@
 .search-block {
     display: flex;
     align-items: center;
-    border: 1px solid #333;
-
+    border: 1px solid var(--border-color);
     &__input {
         border: none;
         width: 95%;

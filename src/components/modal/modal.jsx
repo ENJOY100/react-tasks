@@ -1,7 +1,6 @@
 import React from 'react';
-
 import Select from '../select';
-import GetModalTitle from '../../utils/getModalTitle';
+import { getModalTitle as GetTitle } from '../../utils/getModalTitle';
 
 export const View = (props) => {
     const {
@@ -15,7 +14,8 @@ export const View = (props) => {
         openList,
         inputName,
         checkName,
-        selectCategory
+        selectCategory,
+        handleKeyPress
     } = props;
 
     const hidden = modal.hidden ? 'hidden' : '';
@@ -27,7 +27,7 @@ export const View = (props) => {
                 <div className="modal__close" onClick={modalClose}>×</div>
                 <div className="modal__head">
                         <span className="modal__title">
-                            <GetModalTitle modal={modal} />
+                            <GetTitle modal={modal} />
                         </span>
                 </div>
 
@@ -44,6 +44,7 @@ export const View = (props) => {
                                     onChange={(event) => changeEvent(event, inputName)}
                                     type="text"
                                     className="modal__input modal__input--name"
+                                    onKeyDown={(event) => handleKeyPress(event)}
                                 />
                             </div>
                         </div>
@@ -57,6 +58,7 @@ export const View = (props) => {
                                     type="checkbox"
                                     defaultChecked={input.modalCheckValue}
                                     onChange={(event) => changeEvent(event, checkName)}
+                                    onKeyDown={(event) => handleKeyPress(event)}
                                 />
                                 <span className="modal__label-text">Check this todo</span>
                             </label>
@@ -73,12 +75,12 @@ export const View = (props) => {
                         </div>
                     }
 
-                    <div className="modal__line">
+                    <div className="modal__line mt-10">
                         <button className="btn btn--action" onClick={clickEvent}>Save</button>
                     </div>
 
                 </div>
             </div>
         </div>
-    );
+    )
 }

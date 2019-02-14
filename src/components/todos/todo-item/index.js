@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { View } from './todo-item';
+
 import './todo-item.scss';
 
 export default class TodoItem extends Component {

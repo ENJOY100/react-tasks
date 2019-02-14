@@ -1,6 +1,4 @@
-//import React from 'react';
-
-const GetModalTitle = (props) => {
+export const getModalTitle = (props) => {
     switch (props.modal.status) {
         case 'add': {
             return 'Add category';
@@ -16,7 +14,3 @@ const GetModalTitle = (props) => {
         }
     }
 }
-
-export default GetModalTitle;
-
-// REFACTORED

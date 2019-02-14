@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View } from './tree';
-import './tree.scss'
-
 import TodosTreeItem from '../tree-item';
+import { View } from './tree';
+
+import './tree.scss';
 
 export default class TodosTree extends Component {
     render() {

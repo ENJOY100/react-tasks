@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
 import { storage } from '../../storage';
-//import { Link } from 'react-router-dom';
 
 import { View } from './todos';
-
 import Category from '../../models/category';
 import Todo from '../../models/todo';
-
 import { getEditedTodo } from '../../utils/getEditedTodo';
 import { getDeletedCategory } from '../../utils/getDeletedCategory';
 
@@ -64,7 +61,7 @@ export default class Todos extends Component {
         }
     }
 
-    addCategory = (event) => {
+    addCategory = (event, name) => {
         event.preventDefault();
         const { todos, input } = this.state;
 
@@ -74,10 +71,11 @@ export default class Todos extends Component {
         todos.fetch.push(newCategory);
 
         this.stateUpdateTodos(todos);
-        this.inputValueClear('categoryValue');
+        this.inputValueClear(name);
     }
 
     showTodos = (el, event) => {
+        this.props.history.push(`/category/${el.id}`);
         const { todos, input } = this.state;
         const id = todos.fetch.indexOf(el);
 
@@ -91,7 +89,7 @@ export default class Todos extends Component {
         });
     }
 
-    addTodo = () => {
+    addTodo = (event, name) => {
         const { todos, input } = this.state;
         const id = todos.fetch.indexOf(todos.view);
 
@@ -101,7 +99,7 @@ export default class Todos extends Component {
         todos.fetch[id].items.push(newTodo);
 
         this.stateUpdateTodos(todos);
-        this.inputValueClear('todoValue');
+        this.inputValueClear(name);
     }
 
     deleteCategory = (el, event) => {
@@ -257,7 +255,8 @@ export default class Todos extends Component {
                 editCategory={this.editCategory}
                 editTodo={this.editTodo}
                 singleTodoCheck={this.singleTodoCheck}
+                slug={this.props.match.params.slug}
             />
-        );
+        )
     }
 }

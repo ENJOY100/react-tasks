@@ -5,6 +5,7 @@ export const View = (props) => {
     const { el, deleteCategory, modalOpen, openList, todosTreeItemClass, childrenCat, treeClickEvent } = props;
     return (
         <li className={todosTreeItemClass}>
+
             <div className="tree-list__body" onClick={(event) => {treeClickEvent(el, event)}}>
                 <div className="r ai-c cp-0">
                     <div className="col-5 t-c">
@@ -46,5 +47,5 @@ export const View = (props) => {
             }
 
         </li>
-    );
+    )
 }

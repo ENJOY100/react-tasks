@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View } from './checkbtn';
+
 import './checkbtn.scss';
 
-export default class CheckButton extends Component {
-    render() {
-        return (
-            <View
-                text={this.props.text}
-                name={this.props.name}
-                input={this.props.input}
-                changeEvent={this.props.changeEvent}
-            />
-        )
-    }
+const CheckButton = (props) => {
+    return (
+        <View
+            text={props.text}
+            name={props.name}
+            input={props.input}
+            changeEvent={props.changeEvent}
+        />
+    )
 }
+
+export default CheckButton;

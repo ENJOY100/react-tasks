@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import './insert-block.scss'
-
 import { View } from './insert-block';
+
+import './insert-block.scss';
 
 export default class InsertBlock extends Component {
 
-    handleKeyPress = (event) => {
+    handleKeyPress = (event, name) => {
         if (event.key === 'Enter'){
-            this.props.clickEvent(event);
+            this.props.clickEvent(event, name);
         }
     }
 

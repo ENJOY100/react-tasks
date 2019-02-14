@@ -12,7 +12,7 @@
 }
 .modal {
     padding: 25px;
-    border: 1px solid #7f7f7f;
+    border: 1px solid var(--border-color);
     background-color: #fff;
     width: 500px;
     position: relative;
@@ -36,7 +36,7 @@
     &__head {
         text-align: center;
         font-size: 20px;
-        font-family: Arial, sans-serif;
+        font-family: var(--font-m);
         font-weight: bold;
     }
     &__body {
@@ -46,7 +46,7 @@
         padding: 5px 0;
     }
     &__input {
-        border: 1px solid #333;
+        border: 1px solid var(--border-color);
         width: 100%;
         padding: 3px 10px;
     }
@@ -59,9 +59,9 @@
     cursor: pointer;
     &--action {
         padding: 5px 15px;
-        background-color: #e5ebf1;
+        border: 1px solid var(--border-color);
         &:hover {
-            background-color: #dfe6ed;
+            background-color: var(--btn-hover);
         }
     }
 }

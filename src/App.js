@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 
-import './App.scss';
 import 'aline.css/dist/aline.min.css';
 import 'font-awesome/css/font-awesome.min.css';
+import './App.scss';
 
 class App extends Component {
     render() {
@@ -10,7 +10,7 @@ class App extends Component {
             <React.Fragment>
                 {this.props.children}
             </React.Fragment>
-        );
+        )
     }
 }
 

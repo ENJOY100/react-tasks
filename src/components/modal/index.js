@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './modal.scss'
-
 import { View } from './modal';
+
+import './modal.scss';
 
 export default class Modal extends Component {
 
@@ -10,6 +10,12 @@ export default class Modal extends Component {
 
         if (!modal.el.current.contains(e.target) && !modal.hidden) {
             modalClose();
+        }
+    }
+
+    handleKeyPress = (event) => {
+        if (event.key === 'Enter'){
+            this.clickEvent();
         }
     }
 
@@ -49,6 +55,7 @@ export default class Modal extends Component {
                 clickOver={this.clickOver}
                 inputName={this.props.inputName}
                 checkName={this.props.checkName}
+                handleKeyPress={this.handleKeyPress}
             />
         );
     }

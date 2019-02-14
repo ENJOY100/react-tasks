@@ -3,7 +3,7 @@ import React from 'react';
 export const View = (props) => {
     const { changeEvent, input, text, name } = props;
     return (
-        <button className="check-button">
+        <div className="check-button">
             <label className="check-button__label">
                 <input
                     checked={input.showValue}
@@ -15,6 +15,6 @@ export const View = (props) => {
                      {text}
                  </span>
             </label>
-        </button>
-    );
+        </div>
+    )
 }

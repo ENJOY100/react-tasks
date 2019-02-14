@@ -1,12 +1,27 @@
+:root {
+    --font-m: sans-serif;
+    --color-m: #000;
+    --accent-h: #f5f5f5;
+    --select-bg: #e5e5e5;
+    --select-bg-h: #cccccc;
+    --border-color: #333;
+    --btn-hover: #ddd;
+    --btn-border: #ddd;
+}
 body {
-  font-size: 12px;
-  font-family: sans-serif;
+    font-size: 12px;
+    font-family: sans-serif;
 }
 .app {
     &__body {
-        height: calc(100vh - 67px);
+      height: calc(100vh - 67px);
     }
     &__body-left, &__body-right {
-        overflow-y: auto;
+      overflow-y: auto;
+    }
+}
+@media only screen and (max-width: 767px) {
+    .h-xs-auto {
+      height: auto !important;
     }
 }

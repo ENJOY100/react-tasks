@@ -15,5 +15,5 @@ export const View = (props) => {
             </div>
             }
         </div>
-    );
+    )
 }
