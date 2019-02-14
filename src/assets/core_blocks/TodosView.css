@@ -1,7 +1,0 @@
-.todo-list {
-    padding: 0;
-    margin: 0;
-}
-.todo-list > :last-child {
-    border-bottom: 1px solid #333;
-}

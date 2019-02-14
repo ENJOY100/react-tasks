@@ -91,7 +91,7 @@ export const View = (props) => {
                             <div className="app__body-left h-100">
                                 { todos.fetch.length > 15 &&
                                 <button className="btn btn-ui mb-10" onClick={treeClear}>
-                                    Очистить Список
+                                    Clear Tree
                                 </button>
                                 }
                                 <TodosTree
