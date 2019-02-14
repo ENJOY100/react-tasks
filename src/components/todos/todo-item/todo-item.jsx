@@ -10,8 +10,8 @@ export const View = (props) => {
                     <input
                         className="todo__checkbox"
                         type="checkbox"
-                        checked={ el.checked }
-                        onChange={(event) => {changeEvent(event, el)} }
+                        checked={el.checked}
+                        onChange={(event) => {changeEvent(event, el)}}
                     />
                 </div>
                 <div className="col-80">

@@ -7,6 +7,9 @@ import { View } from './todos';
 import Category from '../../models/category';
 import Todo from '../../models/todo';
 
+import { getEditedTodo } from '../../utils/getEditedTodo';
+import { getDeletedCategory } from '../../utils/getDeletedCategory';
+
 export default class Todos extends Component {
     constructor() {
         super();
@@ -61,7 +64,6 @@ export default class Todos extends Component {
         }
     }
 
-    // works fine
     addCategory = (event) => {
         event.preventDefault();
         const { todos, input } = this.state;
@@ -105,14 +107,7 @@ export default class Todos extends Component {
     deleteCategory = (el, event) => {
         const { todos } = this.state;
 
-        const id = todos.fetch.indexOf(el);
-        todos.fetch.splice(id, 1);
-
-        this.stateUpdateTodos(todos);
-        if (todos.view === el) {
-            todos.view = null;
-            this.stateUpdateTodos(todos);
-        }
+        this.stateUpdateTodos(getDeletedCategory(todos, el));
         event.stopPropagation();
     }
 
@@ -129,8 +124,6 @@ export default class Todos extends Component {
     }
 
     modalOpen = (preset, el, event, parent) => {
-        // функцию в утилс
-
         const { todos, input, modal } = this.state;
 
         modal.hidden = false;
@@ -199,8 +192,6 @@ export default class Todos extends Component {
     }
 
     editCategory = () => {
-
-        // упростить (функцию в утилс)
         const { todos, input } = this.state;
 
         if (!input.modalNameValue) return alert('Enter the category title');
@@ -213,28 +204,8 @@ export default class Todos extends Component {
 
     editTodo = () => {
         const { todos, input } = this.state;
-        const id = todos.fetch.indexOf(todos.view);
 
-        if (!input.modalNameValue) return alert('Enter the Todo title');
-
-        const todoID = todos.fetch[id].items.indexOf(todos.focus);
-        const todoEL = todos.focus;
-
-        todoEL.name = input.modalNameValue;
-        todoEL.checked = input.modalCheckValue;
-
-        if (todos.selected) {
-            const selectedID = todos.fetch.indexOf(todos.selected);
-            todos.fetch[selectedID].items.push(todoEL);
-            todos.fetch[id].items.splice(todoID, 1);
-
-            this.stateUpdateTodos(todos);
-        } else {
-            todos.fetch[id].items[todoID] = todoEL;
-
-            this.stateUpdateTodos(todos);
-        }
-
+        this.stateUpdateTodos(getEditedTodo(todos, input));
         this.modalClose();
     }
 

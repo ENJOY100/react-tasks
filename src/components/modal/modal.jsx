@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Select from '../select';
-import GetModalTitle from '../../utils/modal-title';
+import GetModalTitle from '../../utils/getModalTitle';
 
 export const View = (props) => {
     const {

@@ -7,9 +7,9 @@ export default class CheckButton extends Component {
         return (
             <View
                 text={this.props.text}
-                name={this.props.showValue}
+                name={this.props.name}
                 input={this.props.input}
-                changeEvent={this.props.inputValueHandler}
+                changeEvent={this.props.changeEvent}
             />
         )
     }

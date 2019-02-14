@@ -5,7 +5,7 @@ import './todo-item.scss';
 export default class TodoItem extends Component {
 
     changeEvent = (event, el) => {
-        const value = event.target.value;
+        const value = event.target.checked;
         this.props.singleTodoCheck(value, el);
     }
 
