@@ -1,139 +1,189 @@
-import React from 'react';
+import React, {Component} from 'react';
+import { storage } from '../../storage';
 
-import InsertBlock from '../../components/insert-block';
-import CheckButton from '../../components/checkbtn';
-import SearchBlock from '../../components/search-block';
-import TodosTree from '../../components/todos/tree';
-import TodosView from '../../components/todos/view';
-import Modal from "../../components/modal";
+import { View } from './todos-view';
+import Category from '../../models/category';
+import Todo from '../../models/todo';
+import { getFilteredTodos } from '../../utils/get-filtered-todos';
 
-export const View = (props) => {
-    const {
-        todos,
-        input,
-        modal,
-        addCategory,
-        inputValueHandler,
-        searchValueChange,
-        inputValueClear,
-        addTodo,
-        treeClear,
-        showTodos,
-        deleteCategory,
-        modalOpen,
-        modalClose,
-        openList,
-        selectCategory,
-        addSubCategory,
-        editCategory,
-        editTodo,
-        singleTodoCheck
-    } = props;
-    return (
-        <section className="app">
-            <div className="c">
+export class Todos extends Component {
+    constructor() {
+        super();
+        this.state = {
+            todos: {
+                fetch: storage.fetch(),
+                list: null,
+                listItems: null,
+                focus: null
+            },
+            input: {
+                searchValue: '',
+                modalNameValue: '',
+                modalCheckValue: false,
+                showValue: false
+            },
+            modal: {
+                el: React.createRef(),
+                hidden: true,
+                status: '',
+            }
+        }
+    }
 
-                <div className="app__header ptb-20">
-                    <div className="r ai-c">
+    checkChanger = (event, name) => {
+        const { todos, input } = this.state;
+        input[name] = event.target.checked;
+        this.setState({
+            input: input
+        });
+        if (todos.list) {
+            todos.listItems = getFilteredTodos(todos, input, todos.list.id, this.modalOpen, this.stateUpdateTodos);
+        }
+    }
 
-                        <div className="col-30 col-s-100">
-                            <div className="app__left">
-                                <InsertBlock
-                                    placeholderName="Enter category titles"
-                                    clickEvent={addCategory}
-                                    changeEvent={inputValueHandler}
-                                    value={input.categoryValue}
-                                    name="categoryValue"
-                                />
-                            </div>
-                        </div>
+    searchChanger = (value) => {
+        const { todos, input } = this.state;
+        input.searchValue = value;
+        this.setState({
+            input: input
+        });
+        if (todos.list) {
+            todos.listItems = getFilteredTodos(todos, input, todos.list.id, this.modalOpen, this.stateUpdateTodos);
+        }
+    }
 
-                        <div className="col-70 col-s-100 mt-s-10">
-                            <div className="app__right">
-                                <div className="r ai-c cp-5">
-                                    <div className="col-15 col-xs-50">
-                                        <CheckButton
-                                            text="Show done"
-                                            name="showValue"
-                                            input={input}
-                                            changeEvent={inputValueHandler}
-                                        />
-                                    </div>
-                                    <div className="col-40 col-xs-50">
-                                        <SearchBlock
-                                            placeholderName="Search"
-                                            input={input}
-                                            changeEvent={searchValueChange}
-                                            clearSearchInput={inputValueClear}
-                                            name="searchValue"
-                                        />
-                                    </div>
-                                    <div className="col-45 col-xs-100 mt-xs-10">
-                                        <InsertBlock
-                                            placeholderName="Text input with button"
-                                            clickEvent={addTodo}
-                                            changeEvent={inputValueHandler}
-                                            value={input.todoValue}
-                                            name="todoValue"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    addCategory = (event, value) => {
+        if (!value) return;
+        event.preventDefault();
+        const { todos } = this.state;
+        const newCategory = new Category(value);
 
-                    </div>
-                </div>
+        todos.fetch.push(newCategory);
+        this.stateUpdateTodos(todos);
+    }
 
-                <div className="app__body pt-30 pt-xs-15">
-                    <div className="r h-100 ai-str">
+    showTodos = (el) => {
+        this.props.history.push(`/category/${el.id}`);
+        const { todos, input } = this.state;
+        const id = todos.fetch.indexOf(el);
 
-                        <div className="col-30 col-s-40 col-xs-100 h-100 h-xs-auto">
-                            <div className="app__body-left h-100 h-xs-auto">
-                                { todos.fetch.length > 15 &&
-                                <button className="btn btn-ui mb-10" onClick={treeClear}>
-                                    Clear Tree
-                                </button>
-                                }
-                                <TodosTree
-                                    todos={todos}
-                                    showTodos={showTodos}
-                                    deleteCategory={deleteCategory}
-                                    modalOpen={modalOpen}
-                                    openList={openList}
-                                />
-                            </div>
-                        </div>
+        todos.list = todos.fetch[id];
+        todos.listItems = getFilteredTodos(todos, input, el.id, this.modalOpen, this.stateUpdateTodos);
+        this.setState({
+            todos: todos,
+            input: input
+        });
+    }
 
-                        <div className="col-70 col-s-60 col-xs-100 mt-xs-15 h-100 h-xs-auto">
-                            <div className="app__body-right h-100 h-xs-auto">
-                                <TodosView
-                                    todos={todos}
-                                    modalOpen={modalOpen}
-                                    input={input}
-                                    singleTodoCheck={singleTodoCheck}
-                                    slug={props.slug}
-                                />
-                            </div>
-                        </div>
+    addTodo = (event, value) => {
+        if (!value) return;
+        event.preventDefault();
+        const { todos, input } = this.state;
+        const id = todos.fetch.indexOf(todos.list);
+        const newTodo = new Todo(value);
 
-                    </div>
-                </div>
+        todos.fetch[id].items.push(newTodo);
+        todos.listItems = getFilteredTodos(todos, input, todos.list.id, this.modalOpen, this.stateUpdateTodos);
+        this.stateUpdateTodos(todos);
+    }
 
-            </div>
-            <Modal
-                todos={todos}
-                input={input}
-                modal={modal}
-                modalClose={modalClose}
-                inputValueHandler={inputValueHandler}
-                openList={openList}
-                selectCategory={selectCategory}
-                addSubCategory={addSubCategory}
-                editCategory={editCategory}
-                editTodo={editTodo}
-                inputName="modalNameValue"
-                checkName="modalCheckValue"
+    modalOpen = (preset, el, event) => {
+        const { todos, input, modal } = this.state;
+
+        modal.hidden = false;
+        switch (preset) {
+            case 'add': {
+                modal.status = preset;
+                todos.focus = el;
+                this.setState({
+                    modal: modal,
+                    todos: todos
+                });
+                break;
+            }
+            case 'edit': {
+                modal.status = preset;
+                input.modalNameValue = el.name;
+                todos.focus = el;
+                this.stateUpdateAll(todos, input, modal);
+                break;
+            }
+            case 'edit-todo': {
+                modal.status = preset;
+                input.modalNameValue = el.name;
+                input.modalCheckValue = el.checked;
+                todos.focus = el;
+                this.stateUpdateAll(todos, input, modal);
+                break;
+            }
+            default:
+                return false;
+        }
+        event.stopPropagation();
+    }
+
+    modalClose = () => {
+        const { todos, input, modal } = this.state;
+
+        modal.hidden = true;
+        modal.status = input.modalNameValue = '';
+        input.modalСheckValue = false;
+        todos.focus = null;
+        this.stateUpdateAll(todos, input, modal);
+    }
+
+    stateUpdateAll = (todos, input, modal) => {
+        storage.save(todos.fetch);
+        this.setState({
+            todos: todos,
+            input: input,
+            modal: modal
+        });
+    }
+
+    stateUpdateTodos = (todos) => {
+        storage.save(todos.fetch);
+        this.setState({
+            todos: todos
+        });
+    }
+
+    treeClear = () => {
+        const { todos } = this.state;
+        todos.fetch = [];
+        todos.list = todos.listItems = null;
+        storage.clear();
+        this.setState({
+            todos: todos,
+        });
+    }
+
+    componentDidMount() {
+        const slug = this.props.match.params.slug;
+        if (slug) {
+            const { todos, input } = this.state;
+            todos.list = todos.fetch ? todos.fetch.find(el => el.id === parseFloat(slug)) : null;
+            todos.listItems = getFilteredTodos(todos, input, slug, this.modalOpen, this.stateUpdateTodos, this.props);
+            this.stateUpdateTodos(todos);
+        }
+    }
+
+    render() {
+        return (
+            <View
+                todos={this.state.todos}
+                input={this.state.input}
+                modal={this.state.modal}
+                checkChanger={this.checkChanger}
+                searchChanger={this.searchChanger}
+                addCategory={this.addCategory}
+                showTodos={this.showTodos}
+                addTodo={this.addTodo}
+                modalOpen={this.modalOpen}
+                modalClose={this.modalClose}
+                stateUpdateTodos={this.stateUpdateTodos}
+                treeClear={this.treeClear}
             />
-        </section>
-    )
+        )
+    }
 }

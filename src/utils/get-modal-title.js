@@ -1,5 +1,5 @@
 export const getModalTitle = (props) => {
-    switch (props.modal.status) {
+    switch (props.status) {
         case 'add': {
             return 'Add category';
         }

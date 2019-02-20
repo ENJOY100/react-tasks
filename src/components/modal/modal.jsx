@@ -1,86 +1,47 @@
-import React from 'react';
-import Select from '../select';
-import { getModalTitle as GetTitle } from '../../utils/getModalTitle';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { View } from './modal-view';
 
-export const View = (props) => {
-    const {
-        todos,
-        input,
-        modal,
-        clickEvent,
-        modalClose,
-        changeEvent,
-        clickOver,
-        openList,
-        inputName,
-        checkName,
-        selectCategory,
-        handleKeyPress
-    } = props;
+import './modal.scss';
 
-    const hidden = modal.hidden ? 'hidden' : '';
-    const modalClass = `modal-wrap ${hidden}`;
+export class Modal extends Component {
 
-    return (
-        <div className={modalClass} onClick={clickOver}>
-            <div className="modal" ref={modal.el}>
-                <div className="modal__close" onClick={modalClose}>×</div>
-                <div className="modal__head">
-                        <span className="modal__title">
-                            <GetTitle modal={modal} />
-                        </span>
-                </div>
+    clickOver = (e) => {
+        const { modal, modalClose } = this.props;
+        if (!modal.el.current.contains(e.target) && !modal.hidden) {
+            modalClose();
+        }
+    }
 
-                <div className="modal__body">
+    render() {
+        const {
+            todos,
+            input,
+            modal,
+            modalClose,
+            modalOpen,
+            stateUpdateTodos
+        } = this.props;
 
-                    <div className="modal__line">
-                        <div className="r ai-c">
-                            <div className="col-30">
-                                <label>Name:</label>
-                            </div>
-                            <div className="col-70">
-                                <input
-                                    value={input.modalNameValue}
-                                    onChange={(event) => changeEvent(event, inputName)}
-                                    type="text"
-                                    className="modal__input modal__input--name"
-                                    onKeyDown={(event) => handleKeyPress(event)}
-                                />
-                            </div>
-                        </div>
-                    </div>
+        return (
+            <View
+                todos={todos}
+                input={input}
+                modal={modal}
+                modalClose={modalClose}
+                clickOver={this.clickOver}
+                stateUpdateTodos={stateUpdateTodos}
+                modalOpen={modalOpen}
+            />
+        )
+    }
+}
 
-                    { modal.status === 'edit-todo' &&
-                        <div className="modal__line">
-                            <label className="modal__label df ai-c">
-                                <input
-                                    className="modal__checkbox"
-                                    type="checkbox"
-                                    defaultChecked={input.modalCheckValue}
-                                    onChange={(event) => changeEvent(event, checkName)}
-                                    onKeyDown={(event) => handleKeyPress(event)}
-                                />
-                                <span className="modal__label-text">Check this todo</span>
-                            </label>
-                        </div>
-                    }
-
-                    { modal.status === 'edit-todo' &&
-                        <div className="modal__line">
-                            <Select
-                                todos={todos}
-                                openList={openList}
-                                selectCategory={selectCategory}
-                            />
-                        </div>
-                    }
-
-                    <div className="modal__line mt-10">
-                        <button className="btn btn--action" onClick={clickEvent}>Save</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    )
+Modal.propTypes = {
+    todos: PropTypes.object,
+    input: PropTypes.object,
+    modal: PropTypes.object,
+    modalClose: PropTypes.func,
+    modalOpen: PropTypes.func,
+    stateUpdateTodos: PropTypes.func
 }

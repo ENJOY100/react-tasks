@@ -1,20 +1,38 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import './checkbtn.scss';
 
-export const View = (props) => {
-    const { changeEvent, input, text, name } = props;
+export const CheckButton = (props) => {
+    const {
+        text,
+        name,
+        el,
+        changeEvent
+    } = props;
+
+    let value = el ? el.checked : props.value;
     return (
         <div className="check-button">
             <label className="check-button__label">
                 <input
-                    checked={input.showValue}
+                    checked={value}
                     className="check-button__checkbox"
                     type="checkbox"
-                    onChange={(event) => changeEvent(event, name)}
+                    onChange={(event) => changeEvent(event, name, el)}
                 />
-                <span className="check-button__text">
-                     {text}
-                 </span>
+                { text &&
+                    <div className="check-button__text">
+                        {text}
+                    </div>
+                }
             </label>
         </div>
     )
+}
+
+CheckButton.propTypes = {
+    text: PropTypes.string,
+    name: PropTypes.string,
+    el: PropTypes.object,
+    changeEvent: PropTypes.func
 }

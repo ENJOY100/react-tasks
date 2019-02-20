@@ -1,17 +1,24 @@
 import React from 'react';
-import Button from '../../button';
+import PropTypes from 'prop-types';
+import CheckButton from '../../../components/checkbtn';
+import Button from '../../../components/button';
 
 export const View = (props) => {
-    const { el, modalOpen, changeEvent } = props;
+    const {
+        el,
+        modalOpen,
+        changeEvent,
+        checkedValue
+    } = props;
+
     return (
         <li className="todo-list__item todo">
             <div className="r ai-c">
                 <div className="col-10 t-c">
-                    <input
-                        className="todo__checkbox"
-                        type="checkbox"
-                        checked={el.checked}
-                        onChange={(event) => {changeEvent(event, el)}}
+                    <CheckButton
+                        value={checkedValue}
+                        el={el}
+                        changeEvent={changeEvent}
                     />
                 </div>
                 <div className="col-80">
@@ -27,4 +34,11 @@ export const View = (props) => {
             </div>
         </li>
     )
+}
+
+View.propTypes = {
+    el: PropTypes.object,
+    modalOpen: PropTypes.func,
+    changeEvent: PropTypes.func,
+    checkedValue: PropTypes.bool
 }

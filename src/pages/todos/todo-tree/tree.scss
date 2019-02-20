@@ -8,6 +8,9 @@
     &__select-item &__body {
         padding: 2px;
     }
+    &__select-item &__button {
+        display: none;
+    }
     &__body {
         cursor: pointer;
         padding: 5px;

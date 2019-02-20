@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import App from './App';
 import Todos from "./pages/todos";
-import Error from "./components/error";
+import ErrorPage from "./pages/error-page";
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
@@ -13,7 +13,7 @@ ReactDOM.render(
             <Switch>
                 <Route exact path="/" component={Todos} />
                 <Route path="/category/:slug" component={Todos} />
-                <Route path="*" component={Error} />
+                <Route path="*" component={ErrorPage} />
             </Switch>
         </App>
     </Router>,

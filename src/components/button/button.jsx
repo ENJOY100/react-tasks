@@ -1,7 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import './button.scss';
 
-export const View = (props) => {
+export const Button = (props) => {
+    const buttonClass = `btn-ui btn-ui--${props.preset}`;
     return (
-        <button className={props.buttonClass}></button>
+        <button className={buttonClass}></button>
     )
+}
+
+Button.propTypes = {
+    preset: PropTypes.string
 }

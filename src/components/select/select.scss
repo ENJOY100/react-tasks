@@ -7,6 +7,9 @@
     &:hover {
         background-color: var(--select-bg-h);
     }
+    &__title {
+        font-weight: 700;
+    }
     &__body {
         display: none;
         width: 100%;
