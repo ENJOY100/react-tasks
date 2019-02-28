@@ -1,6 +1,6 @@
 .check-button {
     display: inline-block;
-    * {
+    &__label, &__checkbox {
         cursor: pointer;
     }
     &__label {

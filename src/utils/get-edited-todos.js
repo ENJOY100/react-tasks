@@ -1,5 +1,5 @@
-export const getEditedTodo = (todos, value, checked, selected) => {
-    const id = todos.fetch.indexOf(todos.list);
+export const getEditedTodos = (todos, value, checked, selected) => {
+    const id = todos.fetch.indexOf(todos.selectedCategory);
     const todoID = todos.fetch[id].items.indexOf(todos.focus);
     const todoEL = todos.focus;
 

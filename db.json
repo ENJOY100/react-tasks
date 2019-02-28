@@ -1,0 +1,69 @@
+{
+    "fetch": [
+        {
+            "id": 3711985049,
+            "name": "category 1",
+            "items": [
+                {
+                    "id": 12333214321,
+                    "name": "Item 1",
+                    "checked": false
+                },
+                {
+                    "id": 34522343,
+                    "name": "Item 2",
+                    "checked": true
+                }
+            ],
+            "opened": false
+        },
+        {
+            "id": 205234005,
+            "name": "category 2",
+            "items": [
+                {
+                    "id": 229187765872,
+                    "name": "item 3",
+                    "checked": true
+                }
+            ],
+            "opened": false
+        },
+        {
+            "id": 205213205,
+            "name": "category 3",
+            "items": [
+                {
+                    "id": 2291879786,
+                    "name": "item 3",
+                    "checked": true
+                }
+            ],
+            "opened": false
+        },
+        {
+            "id": 2052131243,
+            "name": "category 4",
+            "items": [
+                {
+                    "id": 234379842,
+                    "name": "item 3",
+                    "checked": true
+                }
+            ],
+            "opened": false
+        },
+        {
+            "id": 2123213205,
+            "name": "category 3",
+            "items": [
+                {
+                    "id": 2643349842,
+                    "name": "item 3",
+                    "checked": true
+                }
+            ],
+            "opened": "false"
+        }
+    ]
+}

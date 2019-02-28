@@ -1,189 +1,169 @@
-import React, {Component} from 'react';
-import { storage } from '../../storage';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import { View } from './todos-view';
+
 import Category from '../../models/category';
 import Todo from '../../models/todo';
+
+import ModalComplexEdit from '../../components/modal/modal-complex-edit';
+import ModalSimpleEdit from '../../components/modal/modal-simple-edit';
+
 import { getFilteredTodos } from '../../utils/get-filtered-todos';
 
-export class Todos extends Component {
-    constructor() {
-        super();
-        this.state = {
-            todos: {
-                fetch: storage.fetch(),
-                list: null,
-                listItems: null,
-                focus: null
-            },
-            input: {
-                searchValue: '',
-                modalNameValue: '',
-                modalCheckValue: false,
-                showValue: false
-            },
-            modal: {
-                el: React.createRef(),
-                hidden: true,
-                status: '',
-            }
+import {
+    todosFilterAction,
+    changeTodosFocusAction,
+    selectCategoryAction,
+    updateTodosFetchAction,
+    todosTreeClear,
+    getTodos
+} from '../../store/todos/actions';
+
+import {
+    inputChangeAction,
+    changeModalNameValueAction,
+    changeModalCheckValueAction,
+} from '../../store/input/actions';
+
+import {
+    changeModalVisibleAction,
+    changeModalFocusAction
+} from '../../store/modal/actions';
+
+class Todos extends Component {
+
+    inputChanger = (value, name) => {
+        const { todos, input, todosFilterAction, inputChangeAction } = this.props;
+
+        input[name] = value;
+        inputChangeAction(value, name);
+
+        if (todos.selectedCategory) {
+            todosFilterAction(getFilteredTodos(todos, input, todos.selectedCategory.id));
         }
     }
 
-    checkChanger = (event, name) => {
-        const { todos, input } = this.state;
-        input[name] = event.target.checked;
-        this.setState({
-            input: input
-        });
-        if (todos.list) {
-            todos.listItems = getFilteredTodos(todos, input, todos.list.id, this.modalOpen, this.stateUpdateTodos);
-        }
-    }
-
-    searchChanger = (value) => {
-        const { todos, input } = this.state;
-        input.searchValue = value;
-        this.setState({
-            input: input
-        });
-        if (todos.list) {
-            todos.listItems = getFilteredTodos(todos, input, todos.list.id, this.modalOpen, this.stateUpdateTodos);
-        }
-    }
-
-    addCategory = (event, value) => {
-        if (!value) return;
-        event.preventDefault();
-        const { todos } = this.state;
+    addCategory = (value) => {
+        const { todos, updateTodosFetchAction } = this.props;
         const newCategory = new Category(value);
 
         todos.fetch.push(newCategory);
-        this.stateUpdateTodos(todos);
+        updateTodosFetchAction(todos.fetch);
     }
 
-    showTodos = (el) => {
-        this.props.history.push(`/category/${el.id}`);
-        const { todos, input } = this.state;
-        const id = todos.fetch.indexOf(el);
+    showTodos = (category) => {
+        this.props.history.push(`/category/${category.id}`);
 
-        todos.list = todos.fetch[id];
-        todos.listItems = getFilteredTodos(todos, input, el.id, this.modalOpen, this.stateUpdateTodos);
-        this.setState({
-            todos: todos,
-            input: input
-        });
+        const { todos, input, selectCategoryAction, todosFilterAction } = this.props;
+        const id = todos.fetch.indexOf(category);
+
+        selectCategoryAction(todos.fetch[id]);
+        todosFilterAction(getFilteredTodos(todos, input, category.id));
     }
 
-    addTodo = (event, value) => {
-        if (!value) return;
-        event.preventDefault();
-        const { todos, input } = this.state;
-        const id = todos.fetch.indexOf(todos.list);
+    addTodo = (value) => {
+        const { todos, input, updateTodosFetchAction, todosFilterAction } = this.props;
+
+        if (!todos.selectedCategory) return;
+
+        const id = todos.fetch.indexOf(todos.selectedCategory);
         const newTodo = new Todo(value);
 
         todos.fetch[id].items.push(newTodo);
-        todos.listItems = getFilteredTodos(todos, input, todos.list.id, this.modalOpen, this.stateUpdateTodos);
-        this.stateUpdateTodos(todos);
+
+        updateTodosFetchAction(todos.fetch);
+        todosFilterAction(getFilteredTodos(todos, input, todos.selectedCategory.id));
     }
 
-    modalOpen = (preset, el, event) => {
-        const { todos, input, modal } = this.state;
+    modalOpen = (preset, item, event) => {
 
-        modal.hidden = false;
+        this.props.changeModalVisibleAction(false);
+
         switch (preset) {
             case 'add': {
-                modal.status = preset;
-                todos.focus = el;
-                this.setState({
-                    modal: modal,
-                    todos: todos
-                });
+                const focus = (() => <ModalSimpleEdit status={preset} />)();
+                this.props.changeTodosFocusAction(item);
+                this.props.changeModalFocusAction(focus);
                 break;
             }
             case 'edit': {
-                modal.status = preset;
-                input.modalNameValue = el.name;
-                todos.focus = el;
-                this.stateUpdateAll(todos, input, modal);
+                const focus = (() => <ModalSimpleEdit status={preset} />)();
+                this.props.changeModalNameValueAction(item.name);
+                this.props.changeTodosFocusAction(item);
+                this.props.changeModalFocusAction(focus);
                 break;
             }
             case 'edit-todo': {
-                modal.status = preset;
-                input.modalNameValue = el.name;
-                input.modalCheckValue = el.checked;
-                todos.focus = el;
-                this.stateUpdateAll(todos, input, modal);
+                const focus = (() => <ModalComplexEdit status={preset} />)();
+                this.props.changeModalNameValueAction(item.name);
+                this.props.changeModalCheckValueAction(item.checked);
+                this.props.changeTodosFocusAction(item);
+                this.props.changeModalFocusAction(focus);
                 break;
             }
-            default:
+            default: {
                 return false;
+            }
         }
         event.stopPropagation();
     }
 
-    modalClose = () => {
-        const { todos, input, modal } = this.state;
-
-        modal.hidden = true;
-        modal.status = input.modalNameValue = '';
-        input.modalСheckValue = false;
-        todos.focus = null;
-        this.stateUpdateAll(todos, input, modal);
-    }
-
-    stateUpdateAll = (todos, input, modal) => {
-        storage.save(todos.fetch);
-        this.setState({
-            todos: todos,
-            input: input,
-            modal: modal
-        });
-    }
-
-    stateUpdateTodos = (todos) => {
-        storage.save(todos.fetch);
-        this.setState({
-            todos: todos
-        });
-    }
-
-    treeClear = () => {
-        const { todos } = this.state;
-        todos.fetch = [];
-        todos.list = todos.listItems = null;
-        storage.clear();
-        this.setState({
-            todos: todos,
-        });
-    }
-
     componentDidMount() {
+        this.props.getTodos();
+        const { todos, input, selectCategoryAction, todosFilterAction } = this.props;
+
         const slug = this.props.match.params.slug;
+
+        const historyCategory = todos.fetch.find(category => category.id === parseFloat(slug));
+
+        if (!historyCategory && slug) {
+            this.props.history.push(`/404`);
+        }
+
         if (slug) {
-            const { todos, input } = this.state;
-            todos.list = todos.fetch ? todos.fetch.find(el => el.id === parseFloat(slug)) : null;
-            todos.listItems = getFilteredTodos(todos, input, slug, this.modalOpen, this.stateUpdateTodos, this.props);
-            this.stateUpdateTodos(todos);
+            selectCategoryAction(todos.fetch ? historyCategory : null);
+            todosFilterAction(getFilteredTodos(todos, input, slug));
         }
     }
 
     render() {
         return (
             <View
-                todos={this.state.todos}
-                input={this.state.input}
-                modal={this.state.modal}
-                checkChanger={this.checkChanger}
-                searchChanger={this.searchChanger}
+                todos={this.props.todos}
+                input={this.props.input}
+                modal={this.props.modal}
+                inputChanger={this.inputChanger}
                 addCategory={this.addCategory}
                 showTodos={this.showTodos}
                 addTodo={this.addTodo}
                 modalOpen={this.modalOpen}
-                modalClose={this.modalClose}
-                stateUpdateTodos={this.stateUpdateTodos}
-                treeClear={this.treeClear}
+                treeClear={this.props.todosTreeClear}
             />
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        todos: state.todos,
+        input: state.input,
+        modal: state.modal
+    };
+}
+
+const mapDispatchToProps = {
+    changeModalVisibleAction,
+    inputChangeAction,
+    todosFilterAction,
+    changeTodosFocusAction,
+    changeModalFocusAction,
+    changeModalNameValueAction,
+    changeModalCheckValueAction,
+    selectCategoryAction,
+    todosTreeClear,
+    updateTodosFetchAction,
+    getTodos
+}
+
+export const container = connect(mapStateToProps, mapDispatchToProps)(Todos);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import './insert-block.scss';
 
 export class InsertBlock extends Component {
@@ -7,7 +8,7 @@ export class InsertBlock extends Component {
     constructor() {
         super();
         this.state = {
-            value: '',
+            value: ''
         }
     }
 
@@ -17,20 +18,17 @@ export class InsertBlock extends Component {
         });
     }
 
-    clickEvent = (event) => {
+    clickEvent = () => {
         if (!this.state.value) return;
+        this.props.clickEvent(this.state.value);
         this.setState({
             value: ''
         });
-        this.props.clickEvent(event, this.state.value);
     }
 
-    handleKeyPress = (event) => {
+    handleKeyUp = (event) => {
         if (event.key === 'Enter'){
-            this.props.clickEvent(event, this.state.value);
-            this.setState({
-                value: ''
-            });
+            this.clickEvent();
         }
     }
 
@@ -39,22 +37,21 @@ export class InsertBlock extends Component {
             <div className="insert-block">
                 <input
                     value={this.state.value}
-                    onChange={(event) => this.changeEvent(event)}
+                    onChange={this.changeEvent}
                     className="insert-block__input"
                     type="text"
                     placeholder={this.props.placeholderName}
-                    onKeyDown={(event) => this.handleKeyPress(event)}
+                    onKeyUp={this.handleKeyUp}
                 />
-                { this.clickEvent &&
-                <button className="insert-block__btn" onClick={(event) => this.clickEvent(event)}>
+                <button className="insert-block__btn" onClick={this.clickEvent}>
                     Add
                 </button>
-                }
             </div>
         )
     }
 }
 
 InsertBlock.propTypes = {
-    placeholderName: PropTypes.string
+    placeholderName: PropTypes.string,
+    clickEvent: PropTypes.func
 }

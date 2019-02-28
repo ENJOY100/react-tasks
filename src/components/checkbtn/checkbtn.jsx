@@ -1,16 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import './checkbtn.scss';
 
-export const CheckButton = (props) => {
-    const {
-        text,
-        name,
-        el,
-        changeEvent
-    } = props;
+export const CheckButton = ({text, value, changeEvent}) => {
 
-    let value = el ? el.checked : props.value;
     return (
         <div className="check-button">
             <label className="check-button__label">
@@ -18,11 +12,11 @@ export const CheckButton = (props) => {
                     checked={value}
                     className="check-button__checkbox"
                     type="checkbox"
-                    onChange={(event) => changeEvent(event, name, el)}
+                    onChange={changeEvent}
                 />
                 { text &&
                     <div className="check-button__text">
-                        {text}
+                        { text }
                     </div>
                 }
             </label>
@@ -33,6 +27,9 @@ export const CheckButton = (props) => {
 CheckButton.propTypes = {
     text: PropTypes.string,
     name: PropTypes.string,
-    el: PropTypes.object,
+    value: PropTypes.bool,
+    todo: PropTypes.shape({
+        checked: PropTypes.bool
+    }),
     changeEvent: PropTypes.func
 }

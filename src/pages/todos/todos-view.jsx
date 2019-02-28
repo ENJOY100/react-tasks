@@ -14,14 +14,11 @@ export const View = (props) => {
         todos,
         input,
         modal,
-        checkChanger,
-        searchChanger,
+        inputChanger,
         addCategory,
         showTodos,
         addTodo,
         modalOpen,
-        modalClose,
-        stateUpdateTodos,
         treeClear
     } = props;
 
@@ -47,17 +44,16 @@ export const View = (props) => {
                                     <div className="col-15 col-xs-50">
                                         <CheckButton
                                             text="Show done"
-                                            name="showValue"
                                             value={input.showValue}
-                                            changeEvent={checkChanger}
+                                            changeEvent={(event) => inputChanger(event.target.checked, 'showValue')}
                                         />
                                     </div>
                                     <div className="col-40 col-xs-50">
                                         <SearchBlock
+                                            name="searchValue"
                                             placeholderName="Search"
                                             todos={todos}
-                                            changeEvent={searchChanger}
-                                            name="searchValue"
+                                            changeEvent={inputChanger}
                                         />
                                     </div>
                                     <div className="col-45 col-xs-100 mt-xs-10">
@@ -73,63 +69,60 @@ export const View = (props) => {
                     </div>
                 </div>
 
-                <div className="app__body pt-30 pt-xs-15">
-                    <div className="r h-100 ai-str">
+                    <div className="app__body pt-30 pt-xs-15">
+                        <div className="r h-100 ai-str">
 
-                        <div className="col-30 col-s-40 col-xs-100 h-100 h-xs-auto">
-                            <div className="app__body-left h-100 h-xs-auto">
-                                { todos.fetch.length > 15 &&
-                                <button className="btn btn-ui mb-10" onClick={treeClear}>
-                                    Clear Tree
-                                </button>
-                                }
-                                <TodosTree
-                                    todos={todos}
-                                    showTodos={showTodos}
-                                    modalOpen={modalOpen}
-                                    stateUpdateTodos={stateUpdateTodos}
-                                />
+                            <div className="col-30 col-s-40 col-xs-100 h-100 h-xs-auto">
+                                <div className="app__body-left h-100 h-xs-auto">
+                                    { todos.fetch.length > 15 &&
+                                    <button className="btn btn-ui mb-10" onClick={treeClear}>
+                                        Clear Tree
+                                    </button>
+                                    }
+                                    <TodosTree
+                                        showTodos={showTodos}
+                                        modalOpen={modalOpen}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="col-70 col-s-60 col-xs-100 mt-xs-15 h-100 h-xs-auto">
-                            <div className="app__body-right h-100 h-xs-auto">
-                                <TodosList
-                                    todos={todos}
-                                    input={input}
-                                />
+                            <div className="col-70 col-s-60 col-xs-100 mt-xs-15 h-100 h-xs-auto">
+                                <div className="app__body-right h-100 h-xs-auto">
+                                    <TodosList
+                                        modalOpen={modalOpen}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
-                </div>
 
             </div>
+
             { !modal.hidden &&
                 <Modal
-                    todos={todos}
-                    input={input}
-                    modal={modal}
                     modalOpen={modalOpen}
-                    modalClose={modalClose}
-                    stateUpdateTodos={stateUpdateTodos}
                 />
             }
+
         </section>
     )
 }
 
 View.propTypes = {
-    todos: PropTypes.object,
-    input: PropTypes.object,
-    modal: PropTypes.object,
-    checkChanger: PropTypes.func,
-    searchChanger: PropTypes.func,
+    todos: PropTypes.shape({
+        fetch: PropTypes.array
+    }),
+    input: PropTypes.shape({
+        showValue: PropTypes.bool
+    }),
+    modal: PropTypes.shape({
+        hidden: PropTypes.bool
+    }),
+    inputChanger: PropTypes.func,
     addCategory: PropTypes.func,
     showTodos: PropTypes.func,
     addTodo: PropTypes.func,
     modalOpen: PropTypes.func,
-    modalClose: PropTypes.func,
-    stateUpdateTodos: PropTypes.func,
     treeClear: PropTypes.func
 }

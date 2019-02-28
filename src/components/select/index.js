@@ -1,1 +1,1 @@
-export { Select as default } from './select';
+export { container as default } from './select';

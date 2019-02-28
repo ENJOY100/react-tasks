@@ -1,49 +1,55 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import TodosTreeItem from './todo-tree-item';
+
 import './tree.scss';
 
-export class TodosTree extends Component {
+class TodosTree extends Component {
     render() {
         const {
-            todos,
+            todos: { fetch = [] },
             showTodos,
             modalOpen,
-            selectEvent,
-            stateUpdateTodos
+            selectEvent
         } = this.props;
 
-        let todoItems = [];
-        if (todos.fetch) {
-            todoItems = todos.fetch.filter((el) => {
-                return el.parentID == null;
-            });
-            todoItems = todoItems.map(el =>
-                <TodosTreeItem
-                    key={el.id}
-                    el={el}
-                    todos={todos}
-                    showTodos={showTodos}
-                    modalOpen={modalOpen}
-                    selectEvent={selectEvent}
-                    stateUpdateTodos={stateUpdateTodos}
-                />
-            );
-        }
+        const categories = fetch.filter(category =>
+            category.parentID == null
+        );
+
         return (
             <div className="tree">
                 <ul className="tree-list">
-                    { todoItems }
+                    { categories.map(category =>
+                        <TodosTreeItem
+                            key={category.id}
+                            category={category}
+                            showTodos={showTodos}
+                            modalOpen={modalOpen}
+                            selectEvent={selectEvent}
+                        />
+                    )}
                 </ul>
             </div>
         )
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        todos: state.todos
+    }
+}
+
+export const container = connect(mapStateToProps)(TodosTree);
+
 TodosTree.propTypes = {
-    todos: PropTypes.object,
+    todos: PropTypes.shape({
+        fetch: PropTypes.array
+    }),
     showTodos: PropTypes.func,
     modalOpen: PropTypes.func,
-    selectEvent: PropTypes.func,
-    stateUpdateTodos: PropTypes.func
+    selectEvent: PropTypes.func
 }

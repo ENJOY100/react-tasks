@@ -1,1 +1,1 @@
-export { TodosTree as default } from './todo-tree';
+export { container as default } from './todo-tree';

@@ -14,12 +14,12 @@
     &__body {
         cursor: pointer;
         padding: 5px;
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--color-mineshaft);
         margin-top: -1px;
     }
     &__item &__body:hover {
-        background-color: var(--accent-h);
-        border: 1px solid var(--border-color);
+        background-color: var(--color-wildsand);
+        border: 1px solid var(--color-mineshaft);
     }
     &__button {
         display: inline-block;
@@ -29,10 +29,6 @@
         .tree-list {
             margin-left: 7%;
             display: none;
-        }
-        a {
-            text-decoration: none;
-            color: var(--color-m);
         }
     }
     &__name {
@@ -48,5 +44,6 @@
     }
     &__select-item .tree-list {
         display: block;
+        margin-left: 3%;
     }
 }

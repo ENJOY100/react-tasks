@@ -1,27 +1,69 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import TodoItem from './todo-item';
+
+import { updateTodosFetchAction } from '../../../store/todos/actions';
+
 import './todo-list.scss';
 
-export class TodosList extends Component {
+class TodosList extends Component {
     render() {
-        const { todos, input } = this.props;
+        let {
+            todos,
+            todos: { filteredTodos = [] },
+            input,
+            modalOpen
+        } = this.props;
 
-        let alertText = '';
-        if ((!todos.listItems && input.searchValue) || input.showValue) {
-            alertText = 'No match found';
-        } else if ( todos.list && !todos.listItems ) {
-            alertText = 'Todos is null, please add';
+        if (filteredTodos) {
+            filteredTodos = filteredTodos.map(todo =>
+                <TodoItem
+                    key={todo.id}
+                    todo={todo}
+                    modalOpen={modalOpen}
+                />
+            );
         }
 
         return (
             <ul className="todo-list">
-                { todos.listItems || alertText }
+                { filteredTodos || getMessage(todos, input) }
             </ul>
         )
     }
 }
 
+function getMessage(todos, input) {
+    if ((!todos.filteredTodos && input.searchValue) || input.showValue) {
+        return 'No match found';
+    }
+    if ( todos.selectedCategory && !todos.filteredTodos ) {
+        return 'Todos is null, please add';
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        todos: state.todos,
+        input: state.input
+    };
+}
+
+const mapDispatchToProps = {
+    updateTodosFetchAction
+}
+
+export const container = connect(mapStateToProps, mapDispatchToProps)(TodosList);
+
 TodosList.propTypes = {
-    todos: PropTypes.object,
-    input: PropTypes.object
+    todos: PropTypes.shape({
+        filteredTodos: PropTypes.array,
+        selectedCategory: PropTypes.object
+    }),
+    input: PropTypes.shape({
+        showValue: PropTypes.bool
+    }),
+    updateTodosFetchAction: PropTypes.func
 }

@@ -1,0 +1,1 @@
+export { inputReducer as default } from './reducers';

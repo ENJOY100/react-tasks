@@ -1,41 +1,47 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { debounce } from 'lodash';
+
 import Button from '../button';
+
 import './search-block.scss';
 
 export class SearchBlock extends Component {
     constructor() {
         super();
         this.state = {
-            value: '',
+            value: ''
         }
     }
 
-    changeEvent = (event, name) => {
+    changeEvent = debounce((value) => {
         this.setState({
-            value: event.target.value
+            value: value
         });
-        this.props.changeEvent(event.target.value, name);
-    }
+        this.props.changeEvent(value, this.props.name);
+    }, 50);
 
-    clearInput = (name) => {
+    clearInput = () => {
         this.setState({
             value: ''
         });
-        this.props.changeEvent('', name);
+        this.props.changeEvent('', this.props.name);
     }
 
     render() {
         return (
             <div className="search-block">
-                <input value={this.state.value}
-                       onChange={(event) => this.changeEvent(event, this.props.name)}
-                       className="search-block__input" type="text" placeholder={this.props.placeholderName}
+                <input
+                    value={this.state.value}
+                    onChange={(event) => this.changeEvent(event.target.value)}
+                    className="search-block__input"
+                    type="text"
+                    placeholder={this.props.placeholderName}
                 />
                 { this.state.value &&
-                <div className="search-block__button" onClick={() => this.clearInput(this.props.name)}>
-                    <Button preset="close" />
-                </div>
+                    <div className="search-block__button" onClick={this.clearInput}>
+                        <Button preset="close" />
+                    </div>
                 }
             </div>
         )

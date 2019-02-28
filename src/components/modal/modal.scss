@@ -12,8 +12,8 @@
 }
 .modal {
     padding: 25px;
-    border: 1px solid var(--border-color);
-    background-color: #fff;
+    border: 1px solid var(--color-mineshaft);
+    background-color: var(--color-white);
     width: 500px;
     position: relative;
     &__close {
@@ -24,7 +24,7 @@
         top: 0;
         text-align: center;
         opacity: 0.65;
-        color: #000;
+        color: var(--color-black);
         font-style: normal;
         font-size: 28px;
         cursor: pointer;
@@ -36,7 +36,7 @@
     &__head {
         text-align: center;
         font-size: 20px;
-        font-family: var(--font-m);
+        font-family: var(--font-main);
         font-weight: bold;
     }
     &__body {
@@ -46,7 +46,7 @@
         padding: 5px 0;
     }
     &__input {
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--color-mineshaft);
         width: 100%;
         padding: 3px 10px;
     }
@@ -59,9 +59,9 @@
     cursor: pointer;
     &--action {
         padding: 5px 15px;
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--color-mineshaft);
         &:hover {
-            background-color: var(--btn-hover);
+            background-color: var(--color-alto);
         }
     }
 }

@@ -1,82 +1,103 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import { View } from './todo-tree-item-view';
-import { getDeletedCategory } from '../../../utils/get-deleted-category';
+
+import { getDeletedTodos } from '../../../utils/get-deleted-todos';
+import { updateTodosAllAction, updateTodosFetchAction } from '../../../store/todos/actions';
 
 import './tree.scss';
 
-export default class TodosTreeItem extends Component {
+class TodosTreeItem extends Component {
 
-    openList = (el, event) => {
-        const { todos, stateUpdateTodos } = this.props;
-        const id = todos.fetch.indexOf(el);
+    openList = (category, event) => {
+        const { todos, updateTodosFetchAction } = this.props;
+        const id = todos.fetch.indexOf(category);
 
         todos.fetch[id].opened = !todos.fetch[id].opened;
-        stateUpdateTodos(todos);
+
+        updateTodosFetchAction(todos.fetch);
         event.stopPropagation();
     }
 
-    deleteCategory = (el, event) => {
-        const { todos, stateUpdateTodos } = this.props;
-
-        stateUpdateTodos(getDeletedCategory(todos, el));
+    deleteCategory = (category, event) => {
+        this.props.updateTodosAllAction(getDeletedTodos(this.props.todos, category));
         event.stopPropagation();
     }
 
     render() {
         const {
-            el,
+            category,
             todos,
             showTodos,
             modalOpen,
-            selectEvent,
-            stateUpdateTodos
+            selectEvent
         } = this.props;
 
-        let childrenCat = todos.fetch.filter((item) => {
-            return item.parentID === el.id;
-        });
+        let childrenCategories = todos.fetch.filter(childCategory =>
+            childCategory.parentID === category.id
+        );
 
-        const todosState = el.opened && childrenCat.length > 0 ? true : false;
+        const todosState = category.opened && childrenCategories.length > 0 ? true : false;
 
         let treeClickEvent = showTodos ? showTodos : selectEvent;
 
         const todosTreeItemClass = classNames('tree-list__item', { 'opened': todosState }, { 'tree-list__select-item': !showTodos });
 
-        childrenCat = childrenCat.map(el =>
+        childrenCategories = childrenCategories.map(childCategory =>
             <TodosTreeItem
-                key={el.id}
-                parentEl={el}
-                el={el}
+                key={childCategory.id}
+                parentEl={category}
+                category={childCategory}
                 todos={todos}
                 showTodos={showTodos}
                 modalOpen={modalOpen}
                 selectEvent={selectEvent}
-                stateUpdateTodos={stateUpdateTodos}
+                updateTodosAllAction={this.props.updateTodosAllAction}
+                updateTodosFetchAction={this.props.updateTodosFetchAction}
             />
-        )
+        );
 
         return (
             <View
-                key={this.props.el.id}
-                el={el}
-                deleteCategory={this.deleteCategory}
+                key={category.id}
+                category={category}
                 modalOpen={modalOpen}
+                deleteCategory={this.deleteCategory}
                 openList={this.openList}
                 todosTreeItemClass={todosTreeItemClass}
-                childrenCat={childrenCat}
+                childrenCategories={childrenCategories}
                 treeClickEvent={treeClickEvent}
             />
         )
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        todos: state.todos
+    };
+}
+
+const mapDispatchToProps = {
+    updateTodosAllAction,
+    updateTodosFetchAction
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodosTreeItem);
+
 TodosTreeItem.propTypes = {
-    el: PropTypes.object,
-    todos: PropTypes.object,
+    category: PropTypes.shape({
+        id: PropTypes.number
+    }),
+    todos: PropTypes.shape({
+        fetch: PropTypes.array
+    }),
     showTodos: PropTypes.func,
     modalOpen: PropTypes.func,
     selectEvent: PropTypes.func,
-    stateUpdateTodos: PropTypes.func
+    updateTodosAllAction: PropTypes.func,
+    updateTodosFetchAction: PropTypes.func
 }

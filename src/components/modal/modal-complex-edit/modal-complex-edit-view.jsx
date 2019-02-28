@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from '../select';
-import CheckButton from '../checkbtn';
-import { getModalTitle as GetTitle } from '../../utils/get-modal-title';
+
+import Select from '../../select';
+import CheckButton from '../../checkbtn';
+
+import { getModalTitle as Title } from '../../../utils/get-modal-title';
 
 export const View = (props) => {
+
     const {
-        todos,
-        input,
         status,
         value,
         checked,
         checkedChangeEvent,
         inputChangeEvent,
-        handleKeyPress,
+        handleKeyUp,
         updateSelect,
         clickEvent
     } = props;
@@ -22,7 +23,7 @@ export const View = (props) => {
         <React.Fragment>
             <div className="modal__head">
                 <div className="modal__title">
-                    <GetTitle status={status}/>
+                    <Title status={status}/>
                 </div>
             </div>
 
@@ -36,33 +37,28 @@ export const View = (props) => {
                         <div className="col-70">
                             <input
                                 value={value}
-                                onChange={(event) => inputChangeEvent(event)}
+                                onChange={inputChangeEvent}
                                 type="text"
                                 className="modal__input modal__input--name"
-                                onKeyDown={(event) => handleKeyPress(event)}
+                                onKeyUp={handleKeyUp}
                             />
                         </div>
                     </div>
                 </div>
 
-                { status === 'edit-todo' &&
-                    <div className="modal__line">
-                        <CheckButton
-                            value={checked}
-                            changeEvent={checkedChangeEvent}
-                            text="Check this todo"
-                        />
-                    </div>
-                }
+                <div className="modal__line">
+                    <CheckButton
+                        value={checked}
+                        changeEvent={checkedChangeEvent}
+                        text="Check this todo"
+                    />
+                </div>
 
-                { status === 'edit-todo' &&
-                    <div className="modal__line">
-                        <Select
-                            todos={todos}
-                            updateSelect={updateSelect}
-                        />
-                    </div>
-                }
+                <div className="modal__line">
+                    <Select
+                        updateSelect={updateSelect}
+                    />
+                </div>
 
                 <div className="modal__line mt-10">
                     <button className="btn btn--action" onClick={clickEvent}>Save</button>
@@ -75,13 +71,12 @@ export const View = (props) => {
 
 View.propTypes = {
     todos: PropTypes.object,
-    input: PropTypes.object,
     status: PropTypes.string,
     value: PropTypes.string,
     checked: PropTypes.bool,
     checkedChangeEvent: PropTypes.func,
     inputChangeEvent: PropTypes.func,
-    handleKeyPress: PropTypes.func,
+    handleKeyUp: PropTypes.func,
     updateSelect: PropTypes.func,
     clickEvent: PropTypes.func
 }

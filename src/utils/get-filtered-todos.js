@@ -1,12 +1,8 @@
-import React from 'react';
-import TodoItem from '../pages/todos/todo-list/todo-item';
-
-export const getFilteredTodos = (todos, input, slug, open, update, props) => {
-    const historyCategory = todos.fetch.find(el => el.id === parseFloat(slug));
+export const getFilteredTodos = (todos, input, slug) => {
+    const historyCategory = todos.fetch.find(category => category.id === parseFloat(slug));
 
     if (!historyCategory) {
-        props.history.push(`/404`);
-        return;
+        return
     }
 
     let todosFetch, todosList;
@@ -15,30 +11,27 @@ export const getFilteredTodos = (todos, input, slug, open, update, props) => {
 
     if (todosList && todosList.items) {
         if (input.showValue) {
-            todosFetch = todosList.items.filter((el) => {
-                return el.checked;
-            });
+            todosFetch = todosList.items.filter(todo =>
+                todo.checked
+            );
         } else {
             todosFetch = todosList.items;
         }
     }
 
     if (input.searchValue && todosList && todosList.items) {
-        todosFetch = todosList.items.filter((el) => {
-            return el.name.includes(input.searchValue);
-        });
+        todosFetch = todosList.items.filter(todo =>
+            todo.name.includes(input.searchValue)
+        );
     }
 
-    if (todosList && todosList.items) {
-        todosFetch = todosFetch.map(el =>
-            <TodoItem
-                key={el.id}
-                el={el}
-                todos={todos}
-                modalOpen={open}
-                stateUpdateTodos={update}
-            />
-        )
+    if (input.searchValue && input.showValue && todosList && todosList.items) {
+        todosFetch = todosList.items.filter(todo =>
+            todo.checked
+        );
+        todosFetch = todosFetch.filter(todo =>
+            todo.name.includes(input.searchValue)
+        );
     }
 
     todosList = todosFetch.length > 0 ? todosFetch : null;
