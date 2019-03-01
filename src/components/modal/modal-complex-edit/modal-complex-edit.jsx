@@ -7,7 +7,7 @@ import { View } from './modal-complex-edit-view';
 import { getEditedTodos } from "../../../utils/get-edited-todos";
 import { getFilteredTodos } from "../../../utils/get-filtered-todos";
 
-import { updateTodosFetchAction, todosFilterAction } from '../../../store/todos/actions';
+import { updateTodosFetchAction, todosFilterAction, changeTodos } from '../../../store/todos/actions';
 import { modalCloseAction } from '../../../store/modal/actions';
 
 class ModalComplexEdit extends Component {
@@ -49,6 +49,11 @@ class ModalComplexEdit extends Component {
         todosFilterAction(getFilteredTodos(todos, input, todos.selectedCategory.id));
         updateTodosFetchAction(todos.fetch);
         modalCloseAction();
+
+        this.props.changeTodos(todos.selectedCategory);
+        if (selected) {
+            this.props.changeTodos(selected);
+        }
     }
 
     updateSelect = (value) => {
@@ -90,7 +95,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     updateTodosFetchAction,
     modalCloseAction,
-    todosFilterAction
+    todosFilterAction,
+    changeTodos
 }
 
 export const container = connect(mapStateToProps, mapDispatchToProps)(ModalComplexEdit);

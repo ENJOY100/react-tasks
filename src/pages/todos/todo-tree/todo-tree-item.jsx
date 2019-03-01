@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { View } from './todo-tree-item-view';
 
 import { getDeletedTodos } from '../../../utils/get-deleted-todos';
-import { updateTodosAllAction, updateTodosFetchAction } from '../../../store/todos/actions';
+import { updateTodosAllAction, updateTodosFetchAction, deleteTodos } from '../../../store/todos/actions';
 
 import './tree.scss';
 
@@ -25,6 +25,8 @@ class TodosTreeItem extends Component {
     deleteCategory = (category, event) => {
         this.props.updateTodosAllAction(getDeletedTodos(this.props.todos, category));
         event.stopPropagation();
+
+        this.props.deleteTodos(category);
     }
 
     render() {
@@ -57,6 +59,7 @@ class TodosTreeItem extends Component {
                 selectEvent={selectEvent}
                 updateTodosAllAction={this.props.updateTodosAllAction}
                 updateTodosFetchAction={this.props.updateTodosFetchAction}
+                deleteTodos={this.props.deleteTodos}
             />
         );
 
@@ -83,7 +86,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     updateTodosAllAction,
-    updateTodosFetchAction
+    updateTodosFetchAction,
+    deleteTodos
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodosTreeItem);

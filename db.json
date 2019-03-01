@@ -1,69 +1,64 @@
 {
     "fetch": [
         {
-            "id": 3711985049,
-            "name": "category 1",
+            "id": 1106206787,
+            "name": "Category 1",
             "items": [
                 {
-                    "id": 12333214321,
-                    "name": "Item 1",
+                    "id": 8603091279,
+                    "name": "Todo 1",
                     "checked": false
-                },
-                {
-                    "id": 34522343,
-                    "name": "Item 2",
-                    "checked": true
                 }
             ],
             "opened": false
         },
         {
-            "id": 205234005,
-            "name": "category 2",
+            "id": 294149136,
+            "name": "Category 2",
             "items": [
                 {
-                    "id": 229187765872,
-                    "name": "item 3",
-                    "checked": true
+                    "id": 1685441892,
+                    "name": "Todo 2",
+                    "checked": false
                 }
             ],
             "opened": false
         },
         {
-            "id": 205213205,
-            "name": "category 3",
+            "id": 6406409445,
+            "name": "Category 3",
             "items": [
                 {
-                    "id": 2291879786,
-                    "name": "item 3",
-                    "checked": true
+                    "id": 225464559,
+                    "name": "Todo 3",
+                    "checked": false
                 }
             ],
             "opened": false
         },
         {
-            "id": 2052131243,
-            "name": "category 4",
+            "id": 3744657029,
+            "name": "Category 4",
             "items": [
                 {
-                    "id": 234379842,
-                    "name": "item 3",
-                    "checked": true
+                    "id": 294388470,
+                    "name": "Todo 4",
+                    "checked": false
                 }
             ],
             "opened": false
         },
         {
-            "id": 2123213205,
-            "name": "category 3",
+            "id": 2614789879,
+            "name": "Category 5",
             "items": [
                 {
-                    "id": 2643349842,
-                    "name": "item 3",
-                    "checked": true
+                    "id": 8426609519,
+                    "name": "Todo 5",
+                    "checked": false
                 }
             ],
-            "opened": "false"
+            "opened": false
         }
     ]
 }

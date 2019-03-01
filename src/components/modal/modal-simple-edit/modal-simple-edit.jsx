@@ -6,7 +6,7 @@ import { View } from './modal-simple-edit-view';
 
 import Category from "../../../models/category";
 
-import { updateTodosFetchAction } from '../../../store/todos/actions';
+import { updateTodosFetchAction, changeTodos, pushTodos } from '../../../store/todos/actions';
 import { modalCloseAction } from '../../../store/modal/actions';
 
 class ModalSimpleEdit extends Component {
@@ -41,6 +41,7 @@ class ModalSimpleEdit extends Component {
 
         updateTodosFetchAction(todos.fetch);
         modalCloseAction();
+        this.props.pushTodos(newCategory);
     }
 
     editCategory = (value) => {
@@ -51,6 +52,7 @@ class ModalSimpleEdit extends Component {
         todos.fetch[id].name = value;
         updateTodosFetchAction(todos.fetch);
         modalCloseAction();
+        this.props.changeTodos(todos.fetch[id]);
     }
 
     clickEvent = () => {
@@ -95,7 +97,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     updateTodosFetchAction,
-    modalCloseAction
+    modalCloseAction,
+    changeTodos,
+    pushTodos
 }
 
 export const container = connect(mapStateToProps, mapDispatchToProps)(ModalSimpleEdit);

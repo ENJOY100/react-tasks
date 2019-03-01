@@ -17,7 +17,9 @@ import {
     selectCategoryAction,
     updateTodosFetchAction,
     todosTreeClear,
-    getTodos
+    getTodos,
+    pushTodos,
+    changeTodos
 } from '../../store/todos/actions';
 
 import {
@@ -50,6 +52,8 @@ class Todos extends Component {
 
         todos.fetch.push(newCategory);
         updateTodosFetchAction(todos.fetch);
+
+        this.props.pushTodos(newCategory);
     }
 
     showTodos = (category) => {
@@ -74,6 +78,8 @@ class Todos extends Component {
 
         updateTodosFetchAction(todos.fetch);
         todosFilterAction(getFilteredTodos(todos, input, todos.selectedCategory.id));
+
+        this.props.changeTodos(todos.fetch[id]);
     }
 
     modalOpen = (preset, item, event) => {
@@ -109,38 +115,52 @@ class Todos extends Component {
         event.stopPropagation();
     }
 
-    componentDidMount() {
-        this.props.getTodos();
-        const { todos, input, selectCategoryAction, todosFilterAction } = this.props;
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (nextProps.todos.fetch !== this.props.todos.fetch) {
+            const slug = this.props.match.params.slug;
+            const { input, selectCategoryAction, todosFilterAction } = this.props;
+            const historyCategory = nextProps.todos.fetch.find(category => category.id === parseFloat(this.props.match.params.slug));
 
-        const slug = this.props.match.params.slug;
+            if (!historyCategory && slug) {
+                this.props.history.push(`/404`);
+            }
 
-        const historyCategory = todos.fetch.find(category => category.id === parseFloat(slug));
-
-        if (!historyCategory && slug) {
-            this.props.history.push(`/404`);
-        }
-
-        if (slug) {
-            selectCategoryAction(todos.fetch ? historyCategory : null);
-            todosFilterAction(getFilteredTodos(todos, input, slug));
+            if (this.props.match.params.slug) {
+                selectCategoryAction(nextProps.todos.fetch ? historyCategory : null);
+                todosFilterAction(getFilteredTodos(nextProps.todos, input, this.props.match.params.slug));
+            }
         }
     }
 
+    componentWillMount() {
+        this.props.getTodos()
+    }
+
     render() {
-        return (
-            <View
-                todos={this.props.todos}
-                input={this.props.input}
-                modal={this.props.modal}
-                inputChanger={this.inputChanger}
-                addCategory={this.addCategory}
-                showTodos={this.showTodos}
-                addTodo={this.addTodo}
-                modalOpen={this.modalOpen}
-                treeClear={this.props.todosTreeClear}
-            />
-        )
+        if (this.props.todos.loading) {
+            return (
+                <div className="c">
+                    <div className="loading ptb-20">
+                        Loading ...
+                    </div>
+                </div>
+            )
+        }
+        if (!this.props.todos.loading) {
+            return (
+                <View
+                    todos={this.props.todos}
+                    input={this.props.input}
+                    modal={this.props.modal}
+                    inputChanger={this.inputChanger}
+                    addCategory={this.addCategory}
+                    showTodos={this.showTodos}
+                    addTodo={this.addTodo}
+                    modalOpen={this.modalOpen}
+                    treeClear={this.props.todosTreeClear}
+                />
+            )
+        }
     }
 }
 
@@ -163,7 +183,9 @@ const mapDispatchToProps = {
     selectCategoryAction,
     todosTreeClear,
     updateTodosFetchAction,
-    getTodos
+    getTodos,
+    pushTodos,
+    changeTodos
 }
 
 export const container = connect(mapStateToProps, mapDispatchToProps)(Todos);

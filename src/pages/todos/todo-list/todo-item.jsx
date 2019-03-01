@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { View } from './todo-item-view';
 
-import { updateTodosFetchAction } from '../../../store/todos/actions';
+import { updateTodosFetchAction, changeTodos } from '../../../store/todos/actions';
 
 import './todo-item.scss';
 
@@ -32,6 +32,8 @@ class TodoItem extends Component {
         todos.fetch[catID].items[todoID].checked = value;
 
         updateTodosFetchAction(todos.fetch);
+
+        this.props.changeTodos(todos.fetch[catID]);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -63,7 +65,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-    updateTodosFetchAction
+    updateTodosFetchAction,
+    changeTodos
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoItem);

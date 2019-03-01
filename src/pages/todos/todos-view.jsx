@@ -69,33 +69,33 @@ export const View = (props) => {
                     </div>
                 </div>
 
-                    <div className="app__body pt-30 pt-xs-15">
-                        <div className="r h-100 ai-str">
+                <div className="app__body pt-30 pt-xs-15">
+                    <div className="r h-100 ai-str">
 
-                            <div className="col-30 col-s-40 col-xs-100 h-100 h-xs-auto">
-                                <div className="app__body-left h-100 h-xs-auto">
-                                    { todos.fetch.length > 15 &&
+                        <div className="col-30 col-s-40 col-xs-100 h-100 h-xs-auto">
+                            <div className="app__body-left h-100 h-xs-auto">
+                                { todos.fetch.length > 15 &&
                                     <button className="btn btn-ui mb-10" onClick={treeClear}>
                                         Clear Tree
                                     </button>
-                                    }
-                                    <TodosTree
-                                        showTodos={showTodos}
-                                        modalOpen={modalOpen}
-                                    />
-                                </div>
+                                }
+                                <TodosTree
+                                    showTodos={showTodos}
+                                    modalOpen={modalOpen}
+                                />
                             </div>
-
-                            <div className="col-70 col-s-60 col-xs-100 mt-xs-15 h-100 h-xs-auto">
-                                <div className="app__body-right h-100 h-xs-auto">
-                                    <TodosList
-                                        modalOpen={modalOpen}
-                                    />
-                                </div>
-                            </div>
-
                         </div>
+
+                        <div className="col-70 col-s-60 col-xs-100 mt-xs-15 h-100 h-xs-auto">
+                            <div className="app__body-right h-100 h-xs-auto">
+                                <TodosList
+                                    modalOpen={modalOpen}
+                                />
+                            </div>
+                        </div>
+
                     </div>
+                </div>
 
             </div>
 

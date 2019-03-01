@@ -2,24 +2,58 @@ import * as types from '../types';
 
 export const getTodos = () => {
     return (dispatch) => {
-        /*setTimeout(() => {*/
+        setTimeout(() => {
             fetch('http://localhost:3001/fetch')
                 .then(res => res.json())
                 .then(
-                    data => dispatch(todosFetchFromServer(data))
-                );
-        /*}, 2000)*/
+                    data => dispatch(updateTodosFetchAction(data))
+                )
+                .then(() => {
+                    dispatch(changeLoading(false))
+                })
+        }, 500)
+    }
+}
+
+export const pushTodos = (category) => {
+    return () => {
+        fetch('http://localhost:3001/fetch', {
+                method: 'POST',
+                body: JSON.stringify(category),
+                headers: {'Content-type': 'application/json'}
+            })
+            .then(res => console.log(res))
+            .catch(res => console.log(res))
+    }
+};
+
+export const changeTodos = (category) => {
+    return () => {
+        fetch(`http://localhost:3001/fetch/${category.id}`, {
+                method: 'PUT',
+                body: JSON.stringify(category),
+                headers: {'Content-type': 'application/json'}
+            })
+            .then(res => console.log(res))
+            .catch(res => console.log(res))
+    }
+};
+
+export const deleteTodos = (category) => {
+    return () => {
+        fetch(`http://localhost:3001/fetch/${category.id}`, {
+            method: 'DELETE',
+            body: JSON.stringify(category),
+            headers: {'Content-type': 'application/json'}
+        })
+            .then(res => console.log(res))
+            .catch(res => console.log(res))
     }
 };
 
 export const changeLoading = (value) => ({
     type: types.CHANGE_LOADING,
     value
-});
-
-export const todosFetchFromServer = (fetch) => ({
-    type: types.TODOS_FETCH_FROM_SERVER,
-    fetch
 });
 
 export const todosFilterAction = (fetch) => ({

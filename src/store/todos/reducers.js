@@ -61,12 +61,6 @@ export const todosReducer = (state = todosState, action) => {
                 focus: null
             }
         }
-        case types.TODOS_FETCH_FROM_SERVER: {
-            return {
-                ...state,
-                fetch: action.fetch
-            }
-        }
         case types.CHANGE_LOADING: {
             return {
                 ...state,
