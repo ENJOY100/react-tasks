@@ -1,11 +1,9 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
-import todosReducer from './todos';
-import inputReducer from './input';
-import modalReducer from './modal';
+import todosReducer from "./todos";
+import modalReducer from "./modal";
 
 export const mainReducer = combineReducers({
-    todos: todosReducer,
-    input: inputReducer,
-    modal: modalReducer
+	todos: todosReducer,
+	modal: modalReducer
 });

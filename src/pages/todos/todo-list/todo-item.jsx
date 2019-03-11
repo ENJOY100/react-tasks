@@ -4,83 +4,75 @@ import { connect } from 'react-redux';
 
 import { View } from './todo-item-view';
 
-import { updateTodosFetchAction, changeTodos } from '../../../store/todos/actions';
+import { changeTodoItemAsyncAction } from '../../../store/todos/actions';
 
 import './todo-item.scss';
 
-class TodoItem extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            checked: false
-        }
-    }
-
-    changeEvent = (value, todo) => {
-        this.setState({
-            checked: value
-        });
-        this.singleTodoCheck(value, todo);
-    }
-
-    singleTodoCheck = (value, todo) => {
-        const { todos, updateTodosFetchAction } = this.props;
-        const catID = todos.fetch.indexOf(todos.selectedCategory);
-        const todoID = todos.selectedCategory.items.indexOf(todo);
-
-        todos.fetch[catID].items[todoID].checked = value;
-
-        updateTodosFetchAction(todos.fetch);
-
-        this.props.changeTodos(todos.fetch[catID]);
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.todo.checked !== prevState.checked) {
-            return {
-                checked: nextProps.todo.checked
-            }
-        }
-        return false;
-    }
-
-    render() {
-        return (
-            <View
-                key={this.props.todo.id}
-                todo={this.props.todo}
-                value={this.state.checked}
-                modalOpen={this.props.modalOpen}
-                changeEvent={this.changeEvent}
-            />
-        )
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        todos: state.todos
-    };
-}
+const mapStateToProps = state => {
+	return {
+		todos: state.todos,
+	};
+};
 
 const mapDispatchToProps = {
-    updateTodosFetchAction,
-    changeTodos
-}
+	changeTodoItemAsyncAction,
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(TodoItem);
+const TodoItem = connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(
+	class TodoItem extends Component {
+		static propTypes = {
+			todo_item: PropTypes.shape({
+				checked: PropTypes.bool,
+			}),
+			modalOpen: PropTypes.func,
+		};
 
-TodoItem.propTypes = {
-    todos: PropTypes.shape({
-        fetch: PropTypes.array,
-        selectedCategory: PropTypes.shape({
-            items: PropTypes.array
-        }),
-    }),
-    todo: PropTypes.shape({
-        checked: PropTypes.bool
-    }),
-    modalOpen: PropTypes.func,
-    updateTodosFetchAction: PropTypes.func,
-}
+		constructor() {
+			super();
+			this.state = {
+				checked: false,
+			};
+		}
+
+		changeEvent = (value, todo_item) => {
+			this.setState({
+				checked: value,
+			});
+			this.singleTodoCheck(value, todo_item);
+		};
+
+		singleTodoCheck = (value, todo_item) => {
+			const payload = {
+				todo_item,
+				checked: value,
+			};
+			this.props.changeTodoItemAsyncAction(payload);
+		};
+
+		static getDerivedStateFromProps(nextProps, prevState) {
+			if (nextProps.todo_item.checked !== prevState.checked) {
+				return {
+					checked: nextProps.todo_item.checked,
+				};
+			}
+			return false;
+		}
+
+		render() {
+			return (
+				<View
+					key={this.props.todo_item.id}
+					todo_item={this.props.todo_item}
+					value={this.state.checked}
+					modalOpen={this.props.modalOpen}
+					changeEvent={this.changeEvent}
+				/>
+			);
+		}
+	}
+);
+
+export default TodoItem;

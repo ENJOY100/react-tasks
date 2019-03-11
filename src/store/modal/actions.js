@@ -1,15 +1,15 @@
 import * as types from '../types';
 
-export const changeModalVisibleAction = (value) => ({
-    type: types.CHANGE_MODAL_VISIBLE,
-    value: value
+export const changeModalVisibleAction = value => ({
+	type: types.CHANGE_MODAL_VISIBLE,
+	payload: value,
 });
 
 export const changeModalFocusAction = value => ({
-    type: types.CHANGE_MODAL_FOCUS,
-    value: value
+	type: types.CHANGE_MODAL_FOCUS,
+	payload: value,
 });
 
-export const modalCloseAction = () => ({
-    type: types.MODAL_CLOSE
+export const closeModalAction = () => ({
+	type: types.CLOSE_MODAL,
 });

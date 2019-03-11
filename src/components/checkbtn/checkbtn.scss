@@ -1,15 +1,16 @@
 .check-button {
-    display: inline-block;
-    &__label, &__checkbox {
-        cursor: pointer;
-    }
-    &__label {
-        display: inline-flex;
-        align-items: center;
-    }
-    &__text {
-        display: inline-block;
-        padding-left: 3px;
-        user-select: none;
-    }
+	display: inline-block;
+	&__label,
+	&__checkbox {
+		cursor: pointer;
+	}
+	&__label {
+		display: inline-flex;
+		align-items: center;
+	}
+	&__text {
+		display: inline-block;
+		padding-left: 3px;
+		user-select: none;
+	}
 }

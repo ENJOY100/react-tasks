@@ -4,61 +4,54 @@ import { connect } from 'react-redux';
 
 import { View } from './modal-view';
 
+import { closeModalAction } from '../../store/modal/actions';
+
 import './modal.scss';
 
-import { modalCloseAction } from "../../store/modal/actions";
-
-export class Modal extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            el: React.createRef()
-        }
-    }
-
-    clickOver = (e) => {
-        const { modal, modalCloseAction } = this.props;
-        if (!this.state.el.current.contains(e.target) && !modal.hidden) {
-            modalCloseAction();
-        }
-    }
-
-    render() {
-        const {
-            modal,
-            modalOpen,
-            modalCloseAction
-        } = this.props;
-
-        return (
-            <View
-                el={this.state.el}
-                clickOver={this.clickOver}
-                modal={modal}
-                modalOpen={modalOpen}
-                modalClose={modalCloseAction}
-            />
-        )
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        modal: state.modal
-    };
-}
+const mapStateToProps = state => {
+	return {
+		modal: state.modal,
+	};
+};
 
 const mapDispatchToProps = {
-    modalCloseAction
-}
+	closeModalAction,
+};
 
-export const container = connect(mapStateToProps, mapDispatchToProps)(Modal);
+export const Modal = connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(
+	class extends Component {
+		static propTypes = {
+			modal: PropTypes.shape({
+				is_hidden: PropTypes.bool,
+			}),
+			closeModalAction: PropTypes.func,
+		};
 
-Modal.propTypes = {
-    modal: PropTypes.shape({
-        hidden: PropTypes.bool
-    }),
-    modalCloseAction: PropTypes.func,
-    modalOpen: PropTypes.func,
-}
+		constructor() {
+			super();
+			this.el = React.createRef();
+		}
+
+		clickOver = event => {
+			const { modal, closeModalAction } = this.props;
+			if (!this.el.current.contains(event.target) && !modal.is_hidden) {
+				closeModalAction();
+			}
+		};
+
+		render() {
+			const { modal, closeModalAction } = this.props;
+			return (
+				<View
+					el={this.el}
+					clickOver={this.clickOver}
+					modal={modal}
+					modalClose={closeModalAction}
+				/>
+			);
+		}
+	}
+);

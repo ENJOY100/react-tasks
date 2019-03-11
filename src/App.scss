@@ -1,18 +1,19 @@
 body {
-    font-size: 12px;
-    font-family: sans-serif;
-    color: var(--color-main);
+	font-size: 12px;
+	font-family: sans-serif;
+	color: var(--color-main);
 }
 .app {
-    &__body {
-      height: calc(100vh - 67px);
-    }
-    &__body-left, &__body-right {
-      overflow-y: auto;
-    }
+	&__body {
+		height: calc(100vh - 67px);
+	}
+	&__body-left,
+	&__body-right {
+		overflow-y: auto;
+	}
 }
 @media only screen and (max-width: 767px) {
-    .h-xs-auto {
-      height: auto !important;
-    }
+	.h-xs-auto {
+		height: auto !important;
+	}
 }

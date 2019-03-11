@@ -1,64 +1,48 @@
 {
-    "fetch": [
-        {
-            "id": 1106206787,
-            "name": "Category 1",
-            "items": [
-                {
-                    "id": 8603091279,
-                    "name": "Todo 1",
-                    "checked": false
-                }
-            ],
-            "opened": false
-        },
-        {
-            "id": 294149136,
-            "name": "Category 2",
-            "items": [
-                {
-                    "id": 1685441892,
-                    "name": "Todo 2",
-                    "checked": false
-                }
-            ],
-            "opened": false
-        },
-        {
-            "id": 6406409445,
-            "name": "Category 3",
-            "items": [
-                {
-                    "id": 225464559,
-                    "name": "Todo 3",
-                    "checked": false
-                }
-            ],
-            "opened": false
-        },
-        {
-            "id": 3744657029,
-            "name": "Category 4",
-            "items": [
-                {
-                    "id": 294388470,
-                    "name": "Todo 4",
-                    "checked": false
-                }
-            ],
-            "opened": false
-        },
-        {
-            "id": 2614789879,
-            "name": "Category 5",
-            "items": [
-                {
-                    "id": 8426609519,
-                    "name": "Todo 5",
-                    "checked": false
-                }
-            ],
-            "opened": false
-        }
-    ]
+  "categories": [
+    {
+      "id": 2978517420,
+      "name": "Category 1",
+      "parent_id": null,
+      "parents": []
+    },
+    {
+      "id": 6133582115,
+      "name": "Category 2",
+      "parent_id": null,
+      "parents": []
+    },
+    {
+      "id": 2568309448,
+      "name": "Category 3",
+      "parent_id": null,
+      "parents": []
+    },
+    {
+      "id": 3846320110,
+      "name": "Category 4",
+      "parent_id": null,
+      "parents": []
+    },
+    {
+      "id": 4879464242,
+      "name": "Category 5",
+      "parent_id": null,
+      "parents": []
+    }
+  ],
+  "todoitems": [
+    {
+      "id": 409491401,
+      "name": "Todo Item 1",
+      "checked": true,
+      "category_id": 2978517420
+    },
+    {
+      "id": 2360282183,
+      "name": "Todo Item 2",
+      "checked": false,
+      "category_id": 2978517420
+    }
+  ]
 }

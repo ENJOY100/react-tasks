@@ -1,1 +1,1 @@
-export { container as default } from './todo-list';
+export { TodoList as default } from './todo-list';

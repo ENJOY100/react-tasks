@@ -4,66 +4,56 @@ import { connect } from 'react-redux';
 
 import TodoItem from './todo-item';
 
-import { updateTodosFetchAction } from '../../../store/todos/actions';
-
 import './todo-list.scss';
 
-class TodosList extends Component {
-    render() {
-        let {
-            todos,
-            todos: { filteredTodos = [] },
-            input,
-            modalOpen
-        } = this.props;
+const mapStateToProps = state => {
+	return {
+		todos: state.todos,
+	};
+};
 
-        if (filteredTodos) {
-            filteredTodos = filteredTodos.map(todo =>
-                <TodoItem
-                    key={todo.id}
-                    todo={todo}
-                    modalOpen={modalOpen}
-                />
-            );
-        }
+export const TodoList = connect(mapStateToProps)(
+	class extends Component {
+		static propTypes = {
+			todos: PropTypes.shape({
+				filtered_todos: PropTypes.array,
+				selected_category: PropTypes.object,
+				search_value: PropTypes.string,
+				show_value: PropTypes.bool
+			}),
+		};
 
-        return (
-            <ul className="todo-list">
-                { filteredTodos || getMessage(todos, input) }
-            </ul>
-        )
-    }
-}
+		render() {
+			let {
+				todos,
+				todos: { filtered_todos = [] },
+				modalOpen,
+			} = this.props;
 
-function getMessage(todos, input) {
-    if ((!todos.filteredTodos && input.searchValue) || input.showValue) {
-        return 'No match found';
-    }
-    if ( todos.selectedCategory && !todos.filteredTodos ) {
-        return 'Todos is null, please add';
-    }
-}
+			if (filtered_todos) {
+				filtered_todos = filtered_todos.map(todo_item => (
+					<TodoItem
+						key={todo_item.id}
+						todo_item={todo_item}
+						modalOpen={modalOpen}
+					/>
+				));
+			}
 
-const mapStateToProps = (state) => {
-    return {
-        todos: state.todos,
-        input: state.input
-    };
-}
+			return (
+				<ul className="todo-list">
+					{filtered_todos || getMessage(todos)}
+				</ul>
+			);
+		}
+	}
+);
 
-const mapDispatchToProps = {
-    updateTodosFetchAction
-}
-
-export const container = connect(mapStateToProps, mapDispatchToProps)(TodosList);
-
-TodosList.propTypes = {
-    todos: PropTypes.shape({
-        filteredTodos: PropTypes.array,
-        selectedCategory: PropTypes.object
-    }),
-    input: PropTypes.shape({
-        showValue: PropTypes.bool
-    }),
-    updateTodosFetchAction: PropTypes.func
+function getMessage(todos) {
+	if ((!todos.filtered_todos && todos.search_value) || todos.show_value) {
+		return 'No match found';
+	}
+	if (todos.selected_category && !todos.filtered_todos) {
+		return 'Todos is null, please add';
+	}
 }

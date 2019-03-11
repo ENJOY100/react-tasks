@@ -6,8 +6,9 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import mainReducer from './store';
 
-import Todos from "./pages/todos";
-import ErrorPage from "./pages/error-page";
+import Todos from './pages/todos';
+import Modal from './components/modal';
+import ErrorPage from './pages/error-page';
 
 import 'aline.css/dist/aline.min.css';
 import 'font-awesome/css/font-awesome.min.css';
@@ -18,19 +19,23 @@ import './App.scss';
 const store = createStore(mainReducer, applyMiddleware(thunk));
 
 class App extends Component {
-    render() {
-        return (
-            <Provider store={store}>
-                <Router>
-                    <Switch>
-                        <Route exact path="/" component={Todos} />
-                        <Route path="/category/:slug" component={Todos} />
-                        <Route path="*" component={ErrorPage} />
-                    </Switch>
-                </Router>
-            </Provider>
-        )
-    }
+	render() {
+		return (
+			<Provider store={store}>
+				<Router>
+					<Switch>
+						<Route exact path="/" component={Todos} />
+						<Route
+							path="/category/:category_id"
+							component={Todos}
+						/>
+						<Route path="*" component={ErrorPage} />
+					</Switch>
+				</Router>
+				<Modal />
+			</Provider>
+		);
+	}
 }
 
 export default App;
