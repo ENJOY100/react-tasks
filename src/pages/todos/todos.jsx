@@ -17,6 +17,7 @@ import {
 	addCategoryAsyncAction,
 	addTodoItemAsyncAction,
 	getTodoItemsAsyncAction,
+	changeLoading
 } from '../../store/todos/actions';
 
 import {
@@ -40,6 +41,7 @@ const mapDispatchToProps = {
 	addTodoItemAsyncAction,
 	getCategoriesAsyncAction,
 	getTodoItemsAsyncAction,
+	changeLoading,
 };
 
 export const Todos = connect(
@@ -99,20 +101,22 @@ export const Todos = connect(
 
 		componentWillMount() {
 			this.props.getCategoriesAsyncAction().then(() => {
-				if (this.props.match.params.category_id) {
-					const category = this.props.todos.categories.find(
-						category => category.id === parseInt(this.props.match.params.category_id)
-					);
-
-					if (!category && this.props.match.params.category_id) {
-						this.props.history.push(`/404`);
+				this.props.getTodoItemsAsyncAction().then(() => {
+					if (this.props.match.params.category_id) {
+						const category = this.props.todos.categories.find(
+							category => category.id === parseInt(this.props.match.params.category_id)
+						);
+						if (!category && this.props.match.params.category_id) {
+							this.props.history.push(`/404`);
+						}
+						if (category) {
+							this.props.selectCategoryAction(category);
+							this.props.filterTodoItemsAction();
+						}
 					}
+					this.props.changeLoading(false);
+				});
 
-					this.props.getTodoItemsAsyncAction().then(() => {
-						this.props.selectCategoryAction(category);
-						this.props.filterTodoItemsAction();
-					});
-				}
 			});
 		}
 

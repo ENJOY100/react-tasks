@@ -15,7 +15,6 @@ export const getCategoriesAsyncAction = () => {
 				try {
 					const response = await axios_tasks.get('/categories');
 					dispatch(updateCategoriesAction(response.data));
-					dispatch(changeLoading(false));
 					resolve();
 				} catch (e) {
 					reject();
