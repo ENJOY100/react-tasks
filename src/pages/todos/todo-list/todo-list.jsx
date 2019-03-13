@@ -54,5 +54,4 @@ function getMessage(show_value, search_value) {
 	if (search_value || show_value) {
 		return 'No match found';
 	}
-	return 'Todo items is null, please select category and add.'
 }

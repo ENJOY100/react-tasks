@@ -2,47 +2,29 @@
   "categories": [
     {
       "id": 2437846716,
-      "name": "aaa",
+      "name": "Cat 1",
       "parent_id": null,
       "parents": []
     },
     {
       "id": 6647777122,
-      "name": "www",
+      "name": "Cat 2",
       "parent_id": null,
       "parents": []
     },
     {
       "id": 6173334174,
-      "name": "eee",
+      "name": "Cat 3",
       "parent_id": null,
       "parents": []
     },
     {
       "id": 9019310265,
-      "name": "qqq",
+      "name": "Cat 4",
       "parent_id": null,
       "parents": []
     }
   ],
   "todoitems": [
-    {
-      "id": 9115565826,
-      "name": "aaa",
-      "checked": true,
-      "category_id": "2437846716"
-    },
-    {
-      "id": 5505087838,
-      "name": "aaa",
-      "checked": true,
-      "category_id": "2437846716"
-    },
-    {
-      "id": 5427777694,
-      "name": "wwww",
-      "checked": false,
-      "category_id": "2437846716"
-    }
   ]
 }
