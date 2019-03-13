@@ -2,15 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const View = props => {
-	const { status, value, inputChangeEvent, handleKeyUp, clickEvent } = props;
+	const { title, value, inputChangeEvent, handleKeyUp, clickEvent } = props;
 
 	return (
 		<React.Fragment>
 			<div className="modal__head">
-				<div className="modal__title">
-					{status === 'edit' && 'Edit Category'}
-					{status === 'add' && 'Add Category'}
-				</div>
+				<div className="modal__title">{title}</div>
 			</div>
 
 			<div className="modal__body">
@@ -42,7 +39,7 @@ export const View = props => {
 };
 
 View.propTypes = {
-	status: PropTypes.string,
+	title: PropTypes.string,
 	value: PropTypes.string,
 	inputChangeEvent: PropTypes.func,
 	handleKeyUp: PropTypes.func,

@@ -2,7 +2,7 @@ import * as types from '../types';
 
 const modalState = {
 	is_hidden: true,
-	focus: null,
+	modal_component: null,
 };
 
 export const modalReducer = (state = modalState, action) => {
@@ -16,14 +16,14 @@ export const modalReducer = (state = modalState, action) => {
 		case types.CHANGE_MODAL_FOCUS: {
 			return {
 				...state,
-				focus: action.payload,
+				modal_component: action.payload,
 			};
 		}
 		case types.CLOSE_MODAL: {
 			return {
 				...state,
 				is_hidden: true,
-				focus: null,
+				modal_component: null,
 			};
 		}
 		default: {

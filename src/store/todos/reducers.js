@@ -1,15 +1,23 @@
 import * as types from '../types';
+import { createSelector } from 'reselect';
 import { getFilteredTodoItems } from '../../utils/get-filtered-todo-items';
 
 const todosState = {
 	categories: [],
 	todo_items: [],
-	selected_category: null,
-	filtered_todos: [],
 	search_value: '',
 	show_value: false,
 	loading: true,
 };
+
+const getTodosState = state => state.todos;
+const getProps = (state, props) => props.selected_category_id;
+export const getFilteredTodoItemsSelector = createSelector(
+	[getTodosState, getProps],
+	(state, props) => {
+		return getFilteredTodoItems(state, props);
+	}
+);
 
 export const todosReducer = (state = todosState, action) => {
 	switch (action.type) {
@@ -29,8 +37,8 @@ export const todosReducer = (state = todosState, action) => {
 			return {
 				...state,
 				categories: state.categories.map(category => {
-					if (category.id === parseInt(action.payload.category.id)) {
-						category.name = action.payload.value;
+					if (+category.id === +action.payload.id) {
+						category = action.payload;
 					}
 					return category;
 				}),
@@ -46,19 +54,8 @@ export const todosReducer = (state = todosState, action) => {
 			return {
 				...state,
 				todo_items: state.todo_items.map(todo_item => {
-					if (
-						todo_item.id === parseInt(action.payload.todo_item.id)
-					) {
-						todo_item.name = action.payload.value
-							? action.payload.value
-							: action.payload.todo_item.name;
-						todo_item.checked =
-							typeof action.payload.checked == 'boolean'
-								? action.payload.checked
-								: action.payload.todo_item.checked;
-						todo_item.category_id = action.payload.selected_id
-							? action.payload.selected_id
-							: action.payload.todo_item.category_id;
+					if (todo_item.id === +action.payload.id) {
+						return action.payload;
 					}
 					return todo_item;
 				}),
@@ -70,28 +67,10 @@ export const todosReducer = (state = todosState, action) => {
 				todo_items: action.payload,
 			};
 		}
-		case types.FILTER_TODO_ITEMS: {
-			return {
-				...state,
-				filtered_todos: getFilteredTodoItems(state),
-			};
-		}
-		case types.CLEAR_FILTERED_TODOS_ITEMS: {
-			return {
-				...state,
-				filtered_todos: [],
-			};
-		}
-		case types.SELECT_CATEGORY: {
-			return {
-				...state,
-				selected_category: action.payload,
-			};
-		}
 		case types.CLOSE_MODAL: {
 			return {
 				...state,
-				focus: null,
+				modal_component: null,
 			};
 		}
 		case types.CHANGE_LOADING: {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -8,21 +8,15 @@ import { changeTodoItemAsyncAction } from '../../../store/todos/actions';
 
 import './todo-item.scss';
 
-const mapStateToProps = state => {
-	return {
-		todos: state.todos,
-	};
-};
-
 const mapDispatchToProps = {
 	changeTodoItemAsyncAction,
 };
 
 const TodoItem = connect(
-	mapStateToProps,
+	null,
 	mapDispatchToProps
 )(
-	class TodoItem extends Component {
+	class TodoItem extends PureComponent {
 		static propTypes = {
 			todo_item: PropTypes.shape({
 				checked: PropTypes.bool,
@@ -30,45 +24,22 @@ const TodoItem = connect(
 			modalOpen: PropTypes.func,
 		};
 
-		constructor() {
-			super();
-			this.state = {
-				checked: false,
-			};
-		}
-
-		changeEvent = (value, todo_item) => {
-			this.setState({
-				checked: value,
-			});
-			this.singleTodoCheck(value, todo_item);
-		};
-
 		singleTodoCheck = (value, todo_item) => {
 			const payload = {
-				todo_item,
+				...todo_item,
 				checked: value,
 			};
 			this.props.changeTodoItemAsyncAction(payload);
 		};
-
-		static getDerivedStateFromProps(nextProps, prevState) {
-			if (nextProps.todo_item.checked !== prevState.checked) {
-				return {
-					checked: nextProps.todo_item.checked,
-				};
-			}
-			return false;
-		}
 
 		render() {
 			return (
 				<View
 					key={this.props.todo_item.id}
 					todo_item={this.props.todo_item}
-					value={this.state.checked}
+					value={this.props.todo_item.checked}
 					modalOpen={this.props.modalOpen}
-					changeEvent={this.changeEvent}
+					changeEvent={this.singleTodoCheck}
 				/>
 			);
 		}

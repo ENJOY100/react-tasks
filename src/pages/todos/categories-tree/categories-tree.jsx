@@ -38,7 +38,7 @@ export const CategoriesTree = connect(mapStateToProps)(
 			return (
 				<div className="tree">
 					<ul className="tree-list">
-						{ categories.map(category => (
+						{categories.map(category => (
 							<CategoriesTreeItem
 								key={category.id}
 								category={category}

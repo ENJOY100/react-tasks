@@ -48,8 +48,10 @@ export class SearchBlock extends Component {
 					type="text"
 					placeholder={this.props.placeholderName}
 				/>
-				{ this.state.value && (
-					<div className="search-block__button" onClick={this.clearInput}>
+				{this.state.value && (
+					<div
+						className="search-block__button"
+						onClick={this.clearInput}>
 						<Button preset="close" />
 					</div>
 				)}

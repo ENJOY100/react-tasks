@@ -1,24 +1,22 @@
-import * as types from '../types';
-import { closeModalAction } from '../modal/actions';
 import axios from 'axios';
+import * as types from '../types';
+import * as url from '../../constants/url';
+import { closeModalAction } from '../modal/actions';
+import { getChangedCategories } from '../../utils/get-changed-categories';
 
-const axios_tasks = axios.create({
-	baseURL: types.DATABASE_URL,
-	timeout: 1000,
-	headers: { 'Content-type': 'application/json' },
-});
+axios.defaults.baseURL = url.DATABASE_URL;
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 export const getCategoriesAsyncAction = () => {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTimeout(async () => {
 				try {
-					const response = await axios_tasks.get('/categories');
+					const response = await axios.get('/categories');
 					dispatch(updateCategoriesAction(response.data));
 					resolve();
 				} catch (e) {
-					reject();
-					//console.log(e);
+					reject(e);
 				}
 			}, 500);
 		});
@@ -30,12 +28,11 @@ export const getTodoItemsAsyncAction = () => {
 		return new Promise((resolve, reject) => {
 			setTimeout(async () => {
 				try {
-					const response = await axios_tasks.get('/todoitems');
+					const response = await axios.get('/todoitems');
 					dispatch(updateTodoItemsAction(response.data));
 					resolve();
 				} catch (e) {
-					reject();
-					//console.log(e);
+					reject(e);
 				}
 			}, 200);
 		});
@@ -45,11 +42,13 @@ export const getTodoItemsAsyncAction = () => {
 export const addCategoryAsyncAction = category => {
 	return async dispatch => {
 		try {
-			await axios_tasks.post('/categories', category);
+			await axios.post('/categories', category);
 			dispatch(addCategoryAction(category));
-			dispatch(closeModalAction());
+			if (category.parent_id) {
+				dispatch(closeModalAction());
+			}
 		} catch (e) {
-			//console.log(e)
+			throw Error('ADD_CATEGORY', e);
 		}
 	};
 };
@@ -57,86 +56,75 @@ export const addCategoryAsyncAction = category => {
 export const addTodoItemAsyncAction = category => {
 	return async dispatch => {
 		try {
-			await axios_tasks.post('/todoitems', category);
+			await axios.post('/todoitems', category);
 			dispatch(addTodoItemAction(category));
-			dispatch(filterTodoItemsAction());
 		} catch (e) {
-			//console.log(e)
+			throw Error('ADD_TODO', e);
 		}
 	};
 };
 
-export const changeCategoryAsyncAction = payload => {
+export const changeCategoryAsyncAction = category => {
 	return async dispatch => {
 		try {
-			const category = {
-				...payload.category,
-				name: payload.value,
-			};
-			await axios_tasks.put(`/categories/${category.id}`, category);
-			dispatch(changeCategoryAction(payload));
+			await axios.put(`/categories/${category.id}`, category);
+			dispatch(changeCategoryAction(category));
 			dispatch(closeModalAction());
 		} catch (e) {
-			//console.log(e)
+			throw Error('CHANGE_CATEGORY', e);
 		}
 	};
 };
 
-export const changeTodoItemAsyncAction = payload => {
+export const changeTodoItemAsyncAction = (todo_item, in_modal) => {
 	return async dispatch => {
 		try {
-			const todo_item = {
-				...payload.todo_item,
-				name: payload.value ? payload.value : payload.todo_item.name,
-				checked:
-					typeof payload.checked === 'boolean' ? payload.checked : payload.todo_item.checked,
-				category_id:
-					payload.selected_id ? payload.selected_id : payload.todo_item.category_id,
-			};
-			await axios_tasks.put(`/todoitems/${todo_item.id}`, todo_item);
-			dispatch(changeTodoItemAction(payload));
-			dispatch(filterTodoItemsAction());
-			dispatch(closeModalAction());
+			await axios.put(`/todoitems/${todo_item.id}`, todo_item);
+			dispatch(changeTodoItemAction(todo_item));
+			if (in_modal) {
+				dispatch(closeModalAction());
+			}
 		} catch (e) {
-			//console.log(e)
+			throw Error('CHANGE_TODO_ITEM', e);
 		}
 	};
 };
 
-export const deleteCategoriesAsyncAction = ({deleted_categories, remaining_categories, deleted_todo_items, remaining_todo_items}) => {
-	return async dispatch => {
-		for (let i = 0; i < deleted_categories.length; i++) {
+export const deleteCategoriesAsyncAction = category_id => {
+	return async (dispatch, getState) => {
+		const { categories, todo_items } = getState().todos,
+			changed_categories = getChangedCategories(
+				categories,
+				category_id,
+				todo_items
+			);
+
+		for await (let value of changed_categories.deleted_todo_items) {
 			try {
-				await axios_tasks.delete(`/categories/${deleted_categories[i].id}`, deleted_categories[i]);
+				await axios.delete(`/todoitems/${value.id}`, value);
 			} catch (e) {
-				//console.log(e);
+				throw Error('DELETE_TODO_ITEM', e);
 			}
 		}
-		for (let i = 0; i < deleted_todo_items.length; i++) {
+		for await (let value of changed_categories.deleted_categories) {
 			try {
-				await axios_tasks.delete(`/todoitems/${deleted_todo_items[i].id}`, deleted_todo_items[i]);
+				await axios.delete(`/categories/${value.id}`, value);
 			} catch (e) {
-				//console.log(e);
+				throw Error('DELETE_CATEGORY', e);
 			}
 		}
-		dispatch(updateCategoriesAction(remaining_categories));
-		dispatch(updateTodoItemsAction(remaining_todo_items));
-		dispatch(filterTodoItemsAction());
+		dispatch(
+			updateTodoItemsAction(changed_categories.remaining_todo_items)
+		);
+		dispatch(
+			updateCategoriesAction(changed_categories.remaining_categories)
+		);
 	};
 };
 
 export const changeLoading = value => ({
 	type: types.CHANGE_LOADING,
 	payload: value,
-});
-
-export const filterTodoItemsAction = () => ({
-	type: types.FILTER_TODO_ITEMS,
-});
-
-export const selectCategoryAction = category => ({
-	type: types.SELECT_CATEGORY,
-	payload: category,
 });
 
 export const addCategoryAction = category => ({
@@ -162,10 +150,6 @@ export const updateTodoItemsAction = todo_items => ({
 export const changeInputAction = payload => ({
 	type: types.CHANGE_INPUT,
 	payload,
-});
-
-export const clearFilteredTodoItemsAction = () => ({
-	type: types.CLEAR_FILTERED_TODOS_ITEMS,
 });
 
 export const updateCategoriesAction = categories => ({

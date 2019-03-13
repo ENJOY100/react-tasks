@@ -22,7 +22,6 @@ export const CategoryProfileModal = connect(
 )(
 	class extends Component {
 		static propTypes = {
-			status: PropTypes.string,
 			parent_category: PropTypes.object,
 			category: PropTypes.shape({
 				name: PropTypes.string,
@@ -31,16 +30,16 @@ export const CategoryProfileModal = connect(
 			addCategoryAsyncAction: PropTypes.func,
 		};
 
-		constructor() {
-			super();
+		constructor(props) {
+			super(props);
 			this.state = {
-				value: '',
+				name: props.category ? props.category.name : '',
 			};
 		}
 
 		inputChangeEvent = event => {
 			this.setState({
-				value: event.target.value,
+				name: event.target.value,
 			});
 		};
 
@@ -50,50 +49,37 @@ export const CategoryProfileModal = connect(
 			}
 		};
 
-		addSubCategory = value => {
-			if (!value) return;
-
-			const new_category = new Category(
-				value,
-				this.props.parent_category
-			);
+		addSubCategory = name => {
+			if (!name) return;
+			const new_category = new Category(name, this.props.parent_category);
 			this.props.addCategoryAsyncAction(new_category);
 		};
 
-		editCategory = value => {
-			if (!value) return;
-			const payload = {
-				category: this.props.category,
-				value,
+		editCategory = name => {
+			if (!name) return;
+			const category = {
+				...this.props.category,
+				name,
 			};
-			this.props.changeCategoryAsyncAction(payload);
+			this.props.changeCategoryAsyncAction(category);
 		};
 
 		clickEvent = () => {
-			switch (this.props.status) {
-				case 'add': {
-					return this.addSubCategory(this.state.value);
-				}
-				case 'edit': {
-					return this.editCategory(this.state.value);
-				}
-				default: {
-					return false;
-				}
+			if (this.props.category) {
+				this.editCategory(this.state.name);
+			} else {
+				this.addSubCategory(this.state.name);
 			}
 		};
 
-		componentWillMount() {
-			this.setState({
-				value: this.props.category ? this.props.category.name : '',
-			});
-		}
-
 		render() {
+			const title = this.props.category
+				? 'Edit Category'
+				: 'Add Category';
 			return (
 				<View
-					status={this.props.status}
-					value={this.state.value}
+					title={title}
+					value={this.state.name}
 					inputChangeEvent={this.inputChangeEvent}
 					handleKeyUp={this.handleKeyUp}
 					clickEvent={this.clickEvent}

@@ -33,9 +33,13 @@ export class Select extends Component {
 	};
 
 	render() {
-		const selected_name = this.state.selected ? this.state.selected.name : 'Move to category';
+		const selected_name = this.state.selected
+			? this.state.selected.name
+			: 'Move to category';
 		return (
-			<div className={classNames('select', { opened: this.state.opened })} onClick={this.selectOpen}>
+			<div
+				className={classNames('select', { opened: this.state.opened })}
+				onClick={this.selectOpen}>
 				<div className="select__title">{selected_name}</div>
 				<div className="select__body">
 					<CategoriesTree selectEvent={this.selectEvent} />

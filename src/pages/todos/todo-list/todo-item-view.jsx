@@ -13,14 +13,20 @@ export const View = props => {
 				<div className="col-10 t-c">
 					<CheckButton
 						value={value}
-						changeEvent={event => changeEvent(event.target.checked, todo_item)}
+						changeEvent={event =>
+							changeEvent(event.target.checked, todo_item)
+						}
 					/>
 				</div>
 				<div className="col-80">
 					<div className="todo__name">{todo_item.name}</div>
 				</div>
 				<div className="col-10 t-c">
-					<div className="todo__button" onClick={event => modalOpen('edit-todo', todo_item, event)}>
+					<div
+						className="todo__button"
+						onClick={event =>
+							modalOpen('edit-todo', todo_item, event)
+						}>
 						<Button preset="edit" />
 					</div>
 				</div>

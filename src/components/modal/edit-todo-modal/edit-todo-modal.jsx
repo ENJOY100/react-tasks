@@ -16,7 +16,6 @@ export const EditTodoModal = connect(
 )(
 	class extends Component {
 		static propTypes = {
-			status: PropTypes.string,
 			todo_item: PropTypes.shape({
 				name: PropTypes.string,
 				checked: PropTypes.bool,
@@ -24,12 +23,12 @@ export const EditTodoModal = connect(
 			changeTodoItemAsyncAction: PropTypes.func,
 		};
 
-		constructor() {
-			super();
+		constructor(props) {
+			super(props);
 			this.state = {
-				value: '',
-				checked: false,
-				selected_id: null,
+				name: props.todo_item.name || '',
+				checked: props.todo_item.checked,
+				category_id: props.todo_item.category_id || null,
 			};
 		}
 
@@ -41,7 +40,7 @@ export const EditTodoModal = connect(
 
 		inputChangeEvent = event => {
 			this.setState({
-				value: event.target.value,
+				name: event.target.value,
 			});
 		};
 
@@ -52,36 +51,27 @@ export const EditTodoModal = connect(
 		};
 
 		editTodo = () => {
-			const { value, checked, selected_id } = this.state;
-			if (!value) return;
-
-			const payload = {
-				value,
+			const { name, checked, category_id } = this.state;
+			if (!name) return;
+			const todo_item = {
+				...this.props.todo_item,
+				name,
 				checked,
-				selected_id,
-				todo_item: this.props.todo_item,
+				category_id,
 			};
-
-			this.props.changeTodoItemAsyncAction(payload);
+			this.props.changeTodoItemAsyncAction(todo_item, true);
 		};
 
 		updateSelect = value => {
 			this.setState({
-				selected_id: value.id,
+				category_id: value.id,
 			});
 		};
-
-		componentWillMount() {
-			this.setState({
-				value: this.props.todo_item.name || '',
-				checked: this.props.todo_item.checked,
-			});
-		}
 
 		render() {
 			return (
 				<View
-					value={this.state.value}
+					value={this.state.name}
 					checked={this.state.checked}
 					inputChangeEvent={this.inputChangeEvent}
 					checkedChangeEvent={this.checkedChangeEvent}

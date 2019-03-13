@@ -15,6 +15,7 @@ export const View = props => {
 		showTodoItems,
 		addTodo,
 		modalOpen,
+		selected_category_id,
 	} = props;
 
 	return (
@@ -38,7 +39,12 @@ export const View = props => {
 										<CheckButton
 											text="Show done"
 											value={show_value}
-											changeEvent={event => inputChanger(event.target.checked, 'show_value')}
+											changeEvent={event =>
+												inputChanger(
+													event.target.checked,
+													'show_value'
+												)
+											}
 										/>
 									</div>
 									<div className="col-40 col-xs-50">
@@ -73,7 +79,10 @@ export const View = props => {
 
 						<div className="col-70 col-s-60 col-xs-100 mt-xs-15 h-100 h-xs-auto">
 							<div className="app__body-right h-100 h-xs-auto">
-								<TodoList modalOpen={modalOpen} />
+								<TodoList
+									modalOpen={modalOpen}
+									selected_category_id={selected_category_id}
+								/>
 							</div>
 						</div>
 					</div>
@@ -90,4 +99,5 @@ View.propTypes = {
 	showTodoItems: PropTypes.func,
 	addTodo: PropTypes.func,
 	modalOpen: PropTypes.func,
+	selected_category_id: PropTypes.string,
 };

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import mainReducer from './store';
@@ -16,7 +16,12 @@ import './_colors.scss';
 import './_fonts.scss';
 import './App.scss';
 
-const store = createStore(mainReducer, applyMiddleware(thunk));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(
+	mainReducer,
+	composeEnhancers(applyMiddleware(thunk))
+);
 
 class App extends Component {
 	render() {
@@ -24,11 +29,8 @@ class App extends Component {
 			<Provider store={store}>
 				<Router>
 					<Switch>
-						<Route exact path="/" component={Todos} />
-						<Route
-							path="/category/:category_id"
-							component={Todos}
-						/>
+						<Redirect exact from="/" to="/category" />
+						<Route strict path="/category/:category_id?" component={Todos} />
 						<Route path="*" component={ErrorPage} />
 					</Switch>
 				</Router>

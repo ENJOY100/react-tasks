@@ -13,9 +13,7 @@ export const CheckButton = ({ text, value, changeEvent }) => {
 					type="checkbox"
 					onChange={changeEvent}
 				/>
-				{text && (
-					<div className="check-button__text">{text}</div>
-				)}
+				{text && <div className="check-button__text">{text}</div>}
 			</label>
 		</div>
 	);

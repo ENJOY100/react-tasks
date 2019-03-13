@@ -1,31 +1,24 @@
-export const getFilteredTodoItems = todos => {
-	if (!todos.selected_category) {
+export const getFilteredTodoItems = (
+	{ todo_items = [], show_value, search_value },
+	selected_category_id
+) => {
+	if (!selected_category_id) {
 		return;
 	}
 
-	let category = todos.selected_category,
-		todo_items = todos.todo_items.filter(
-			todo_item => parseInt(todo_item.category_id) === parseInt(category.id)
-		);
+	todo_items = todo_items.filter(
+		todo_item => +todo_item.category_id === +selected_category_id
+	);
 
-	if (category && todo_items) {
-		if (todos.show_value) {
-			todo_items = todo_items.filter(todo_item => todo_item.checked);
-		}
+	if (show_value) {
+		todo_items = todo_items.filter(todo_item => todo_item.checked);
 	}
 
-	if (todos.search_value && category && todo_items) {
+	if (search_value) {
 		todo_items = todo_items.filter(todo_item =>
-			todo_item.name.includes(todos.search_value)
+			todo_item.name.includes(search_value)
 		);
 	}
 
-	if (todos.search_value && todos.show_value && category && todo_items) {
-		todo_items = todo_items.filter(todo_item =>
-			todo_item.checked && todo_item.name.includes(todos.search_value)
-		);
-	}
-
-	todo_items = todo_items.length > 0 ? todo_items : null;
-	return todo_items;
+	return todo_items.length > 0 ? todo_items : null;
 };

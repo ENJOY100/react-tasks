@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import Button from '../../../components/button';
+import CategoriesTreeItem from './categories-tree-item';
 
 export const View = props => {
 	const {
@@ -9,10 +11,23 @@ export const View = props => {
 		modalOpen,
 		deleteCategory,
 		openList,
-		category_class,
-		children_categories,
-		treeClickEvent,
+		categories,
+		showTodoItems,
+		selectEvent,
+		opened,
 	} = props;
+
+	let treeClickEvent = showTodoItems ? showTodoItems : selectEvent,
+		children_categories = categories.filter(
+			child_category => child_category.parent_id === category.id
+		);
+
+	const category_opened = !!(opened && children_categories.length),
+		category_class = classNames(
+			'tree-list__item',
+			{ opened: category_opened },
+			{ 'tree-list__select-item': !showTodoItems }
+		);
 
 	return (
 		<li className={category_class}>
@@ -51,7 +66,17 @@ export const View = props => {
 			</div>
 
 			{ children_categories.length > 0 && (
-				<ul className="tree-list">{ children_categories }</ul>
+				<ul className="tree-list">
+					{ children_categories.map(child_category => (
+						<CategoriesTreeItem
+							key={child_category.id}
+							category={child_category}
+							showTodoItems={showTodoItems}
+							modalOpen={modalOpen}
+							selectEvent={selectEvent}
+						/>
+					)) }
+				</ul>
 			)}
 		</li>
 	);
@@ -64,7 +89,8 @@ View.propTypes = {
 	deleteCategory: PropTypes.func,
 	modalOpen: PropTypes.func,
 	openList: PropTypes.func,
-	category_class: PropTypes.string,
-	children_categories: PropTypes.array,
-	treeClickEvent: PropTypes.func
+	categories: PropTypes.array,
+	showTodoItems: PropTypes.func,
+	selectEvent: PropTypes.func,
+	opened: PropTypes.bool
 };
