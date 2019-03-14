@@ -10,14 +10,17 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 export const getCategoriesAsyncAction = () => {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			setTimeout(async () => {
-				try {
-					const response = await axios.get('/categories');
-					dispatch(updateCategoriesAction(response.data));
-					resolve();
-				} catch (e) {
-					reject(e);
-				}
+			setTimeout(() => {
+				axios
+					.get('/categories')
+					.then(response => {
+						dispatch(updateCategoriesAction(response.data));
+						resolve();
+					})
+					.catch(error => {
+						dispatch(drawError(error.message));
+						reject();
+					});
 			}, 500);
 		});
 	};
@@ -26,67 +29,84 @@ export const getCategoriesAsyncAction = () => {
 export const getTodoItemsAsyncAction = () => {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			setTimeout(async () => {
-				try {
-					const response = await axios.get('/todoitems');
-					dispatch(updateTodoItemsAction(response.data));
-					resolve();
-				} catch (e) {
-					reject(e);
-				}
+			setTimeout(() => {
+				axios
+					.get('/todoitems')
+					.then(response => {
+						dispatch(updateTodoItemsAction(response.data));
+						resolve();
+					})
+					.catch(error => {
+						dispatch(drawError(error.message));
+						reject();
+					});
 			}, 200);
 		});
 	};
 };
 
 export const addCategoryAsyncAction = category => {
-	return async dispatch => {
-		try {
-			await axios.post('/categories', category);
-			dispatch(addCategoryAction(category));
-			if (category.parent_id) {
-				dispatch(closeModalAction());
-			}
-		} catch (e) {
-			throw Error('ADD_CATEGORY', e);
-		}
+	return dispatch => {
+		axios
+			.post('/categories', category)
+			.then(() => {
+				dispatch(addCategoryAction(category));
+			})
+			.then(() => {
+				if (category.parent_id) {
+					dispatch(closeModalAction());
+				}
+			})
+			.catch(error => {
+				dispatch(drawError(error.message));
+			});
 	};
 };
 
-export const addTodoItemAsyncAction = category => {
-	return async dispatch => {
-		try {
-			await axios.post('/todoitems', category);
-			dispatch(addTodoItemAction(category));
-		} catch (e) {
-			throw Error('ADD_TODO', e);
-		}
+export const addTodoItemAsyncAction = todo_item => {
+	return dispatch => {
+		axios
+			.post('/todoitems', todo_item)
+			.then(() => {
+				dispatch(addTodoItemAction(todo_item));
+			})
+			.catch(error => {
+				dispatch(drawError(error.message));
+			});
 	};
 };
 
 export const changeCategoryAsyncAction = category => {
-	return async dispatch => {
-		try {
-			await axios.put(`/categories/${category.id}`, category);
-			dispatch(changeCategoryAction(category));
-			dispatch(closeModalAction());
-		} catch (e) {
-			throw Error('CHANGE_CATEGORY', e);
-		}
+	return dispatch => {
+		axios
+			.put(`/categories/${category.id}`, category)
+			.then(() => {
+				dispatch(changeCategoryAction(category));
+			})
+			.then(() => {
+				dispatch(closeModalAction());
+			})
+			.catch(error => {
+				dispatch(drawError(error.message));
+			});
 	};
 };
 
 export const changeTodoItemAsyncAction = (todo_item, in_modal) => {
-	return async dispatch => {
-		try {
-			await axios.put(`/todoitems/${todo_item.id}`, todo_item);
-			dispatch(changeTodoItemAction(todo_item));
-			if (in_modal) {
-				dispatch(closeModalAction());
-			}
-		} catch (e) {
-			throw Error('CHANGE_TODO_ITEM', e);
-		}
+	return dispatch => {
+		axios
+			.put(`/todoitems/${todo_item.id}`, todo_item)
+			.then(() => {
+				dispatch(changeTodoItemAction(todo_item));
+			})
+			.then(() => {
+				if (in_modal) {
+					dispatch(closeModalAction());
+				}
+			})
+			.catch(error => {
+				dispatch(drawError(error.message));
+			});
 	};
 };
 
@@ -102,15 +122,17 @@ export const deleteCategoriesAsyncAction = category_id => {
 		for await (let value of changed_categories.deleted_todo_items) {
 			try {
 				await axios.delete(`/todoitems/${value.id}`, value);
-			} catch (e) {
-				throw Error('DELETE_TODO_ITEM', e);
+			} catch (error) {
+				dispatch(drawError(error.message));
+				return;
 			}
 		}
 		for await (let value of changed_categories.deleted_categories) {
 			try {
 				await axios.delete(`/categories/${value.id}`, value);
-			} catch (e) {
-				throw Error('DELETE_CATEGORY', e);
+			} catch (error) {
+				dispatch(drawError(error.message));
+				return;
 			}
 		}
 		dispatch(
@@ -159,5 +181,10 @@ export const updateCategoriesAction = categories => ({
 
 export const changeTodoItemAction = payload => ({
 	type: types.CHANGE_TODO_ITEM,
+	payload,
+});
+
+export const drawError = payload => ({
+	type: types.DRAW_ERROR,
 	payload,
 });

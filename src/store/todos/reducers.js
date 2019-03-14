@@ -7,6 +7,7 @@ const todosState = {
 	todo_items: [],
 	search_value: '',
 	show_value: false,
+	error_message: '',
 	loading: true,
 };
 
@@ -83,6 +84,12 @@ export const todosReducer = (state = todosState, action) => {
 			return {
 				...state,
 				[action.payload.name]: action.payload.value,
+			};
+		}
+		case types.DRAW_ERROR: {
+			return {
+				...state,
+				error_message: action.payload,
 			};
 		}
 		default: {

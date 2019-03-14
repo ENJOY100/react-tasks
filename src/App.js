@@ -9,6 +9,7 @@ import mainReducer from './store';
 import Todos from './pages/todos';
 import Modal from './components/modal';
 import ErrorPage from './pages/error-page';
+import ErrorMessage from './components/error-message';
 
 import 'aline.css/dist/aline.min.css';
 import 'font-awesome/css/font-awesome.min.css';
@@ -35,6 +36,7 @@ class App extends Component {
 					</Switch>
 				</Router>
 				<Modal />
+				<ErrorMessage />
 			</Provider>
 		);
 	}
